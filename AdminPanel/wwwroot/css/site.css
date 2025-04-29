@@ -1,0 +1,283 @@
+/* site.css */
+:root {
+    --primary-color: #1e3a8a;
+    --grad1: #f59e0b;
+    --grad2: #f97316;
+    --sidebar-width: 260px;
+    --header-height: 70px;
+    --body-bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+    --sidebar-bg: #f0f4f8;
+    --accent-color: #1e293b;
+}
+
+body {
+/*  direction: rtl;*/
+  background-color: var(--body-bg);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: var(--text-dark);
+  overflow-x: hidden;
+}
+
+body.sidebar-open {
+  overflow: hidden;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* Content wrapper - holds sidebar and main content */
+.content-wrapper {
+  display: flex;
+  min-height: calc(100vh - var(--header-height));
+  margin-top: var(--header-height);
+}
+
+/* Header/Topbar */
+.main-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow-sm);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  transition: var(--transition);
+  border-bottom: 1px solid var(--border-color);
+}
+
+
+
+
+.logo-image {
+  height: 60px;
+}
+
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.menu-toggle:hover {
+  background-color: rgba(30, 58, 138, 0.1);
+}
+
+.menu-toggle:focus {
+  outline: none;
+}
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--header-height));
+  background-color: var(--sidebar-bg);
+  box-shadow: -3px 0 10px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+  transition: var(--transition);
+  border-left: 1px solid var(--border-color);
+
+
+  position: fixed;
+  top: var(--header-height);
+  right: 0;
+  transform: translateX(100%);
+  z-index: 999;
+}
+
+.sidebar-body {
+  padding: 1rem 0;
+}
+
+.nav-item {
+  margin: 0.25rem 0.75rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem 1rem;
+  color: var(--text-dark);
+  transition: var(--transition);
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.nav-link:hover, .nav-link.active {
+  background-color: var(--card-bg);
+  color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-link-text {
+  margin-right: 0.75rem;
+  font-weight: 500;
+}
+
+.nav-link i {
+    font-size: 1.25rem;
+    color: var(--text-dark);
+    width: 24px;
+    text-align: center;
+}
+
+.nav-link:hover i, .nav-link.active i {
+  color: var(--primary-color);
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  min-height: 100%;
+  transition: var(--transition);
+  background-color: var(--body-bg);
+
+
+  margin-right: 0;
+}
+
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+    width: 85%;
+    max-width: 320px;
+    z-index: 999;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+
+  
+  .main-content {
+    width: 100%;
+    margin-right: 0;
+  }
+  
+  /* Add overlay when sidebar is open */
+  body.sidebar-open::before {
+    content: '';
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+  }
+}
+
+@media (max-width: 576px) {
+  .main-header {
+    padding: 0 1rem;
+  }
+  
+
+}
+
+
+
+/* Sidebar open state */
+.sidebar.show {
+  transform: translateX(0);
+}
+
+
+/* Main content with sidebar visible */
+body.sidebar-open .main-content {
+  margin-right: 0;
+}
+
+/* Overlay when sidebar is open */
+body.sidebar-open::before {
+  content: '';
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+
+.headCat{
+
+    border-bottom:2px solid var(--primary-color);
+}
+.CardCategory {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 1rem;
+
+}
+.img .input {
+    display: none;
+}
+
+.labelFile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 190px;
+    border: 2px dashed #ccc;
+    align-items: center;
+    text-align: center;
+    padding: 5px;
+    color: #404040;
+    cursor: pointer;
+}

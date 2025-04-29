@@ -1,0 +1,121 @@
+﻿@model Category
+
+
+@{
+    ViewData["Title"] = "Categories";
+  
+}
+
+<section>
+    <div class="d-flex headCat pb-3 justify-content-between align-items-center">
+
+        <div> Number Of Categories: </div>
+        <div>
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategory">
+                <i class="fa-solid fa-plus"></i>
+                Add Category
+            </button>
+
+
+        </div>
+         
+    </div>
+        <!--Add Modal -->
+        <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="addCategoryLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="addCourseLabel">Add Category</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form action="/" method="post" enctype="multipart/form-data">
+
+                         <div class="row g-2">
+                            <div class="col-12">
+                                <label class="form-label" asp-for="Name"></label>
+                                <input  placeholder="Add CategoryName" class="form-control" asp-for="Name" >
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+
+
+
+                         </div>
+
+
+                     
+                     </form>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3 g-2">
+            <div class="col-md-4">
+                <div class="CardCategory">
+                    <h2 class="text-center"> Arabic</h2>
+                    <hr/>
+                    <div class="d-flex align-items-center justify-content-around ">
+                    <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editCategory">
+                        
+                        Edit Category
+                    </button>
+                    <button type="button" class="btn btn-outline-danger">Delete Category</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editCategory" tabindex="-1" aria-labelledby="editCategoryLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addCourseLabel">Edit Category</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form action="/" method="post" enctype="multipart/form-data">
+
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <label class="form-label" asp-for="Name"></label>
+                                <input placeholder="Edit CategoryName" class="form-control" asp-for="Name">
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+
+
+
+                        </div>
+
+
+
+                    </form>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
