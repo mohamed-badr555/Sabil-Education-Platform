@@ -16,44 +16,62 @@ namespace DAL.DB_Context
     {
         public E_LearningDB(DbContextOptions<E_LearningDB> options) : base(options)
         {
-            
         }
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    base.OnConfiguring(optionsBuilder);
-        //}
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // Configure one-to-one relationship between Exam and Video
             modelBuilder.Entity<Exam>()
                 .HasOne(e => e.Video)
                 .WithOne(v => v.Exam)
                 .HasForeignKey<Video>(v => v.ExamID)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading delete
 
             // One-to-many: Question to QuestionChoices
             modelBuilder.Entity<QuestionChoice>()
                 .HasOne(qc => qc.Question)
                 .WithMany(q => q.QuestionChoices)
                 .HasForeignKey(qc => qc.QuestionID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);  // Allow cascading delete from Question to QuestionChoices
 
             // One-to-one: Question to CorrectChoice
             modelBuilder.Entity<Question>()
                 .HasOne(q => q.CorrectChoice)
                 .WithOne()
                 .HasForeignKey<Question>(q => q.CorrectChoiceID)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading delete
+
+            modelBuilder.Entity<AccountAnswer>()
+            .HasOne(a => a.Question)
+            .WithMany(q => q.AccountAnswers)
+            .HasForeignKey(a => a.QuestionId)
+            .OnDelete(DeleteBehavior.NoAction);  // Prevent cascading delete
+
+
+            // Composite key: CourseAccount (UserId, CourseID)
+            modelBuilder.Entity<CourseAccount>()
+                .HasKey(e => new { e.UserId, e.CourseID });
 
             modelBuilder.Entity<CourseAccount>()
-                .HasKey(a => new {a.CourseID, a.AccountID});
+                .HasOne(e => e.User)
+                .WithMany(a => a.CourseAccounts)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading delete
 
-  
+            modelBuilder.Entity<CourseAccount>()
+                .HasOne(e => e.course)
+                .WithMany(c => c.CourseAccounts)
+                .HasForeignKey(e => e.CourseID)
+                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading delete
 
+            // Configure the Category entity
             modelBuilder.Entity<Category>()
                 .Property(a => a.Name)
                 .IsRequired();
 
+            // Configure the Course entity
             modelBuilder.Entity<Course>(entity =>
             {
                 entity.Property(a => a.Title).IsRequired();
@@ -62,36 +80,37 @@ namespace DAL.DB_Context
                 entity.Property(a => a.Duration).IsRequired();
             });
 
+            // Configure the CourseUnit entity
             modelBuilder.Entity<CourseUnit>(entity =>
             {
                 entity.Property(a => a.Title).IsRequired();
             });
 
+            // Configure the Exam entity
             modelBuilder.Entity<Exam>(entity =>
             {
                 entity.Property(a => a.Title).IsRequired();
                 entity.Property(a => a.TimeInMinutes).IsRequired();
             });
 
+            // Configure the Question entity
             modelBuilder.Entity<Question>(entity =>
             {
-                //entity.Property(a => a.Type).IsRequired();
                 entity.Property(a => a.Text).IsRequired();
             });
 
+            // Configure the QuestionChoice entity
             modelBuilder.Entity<QuestionChoice>(entity =>
             {
                 entity.Property(a => a.Text).IsRequired();
             });
 
-  
-
+            // Configure the Video entity
             modelBuilder.Entity<Video>(entity =>
             {
                 entity.Property(a => a.Title).IsRequired();
                 entity.Property(a => a.URL).IsRequired();
             });
-
 
             // Seeding Roles
             modelBuilder.Entity<IdentityRole>().HasData(
@@ -99,11 +118,6 @@ namespace DAL.DB_Context
                 new IdentityRole { Name = "User", NormalizedName = "USER" },
                 new IdentityRole { Name = "Instructor", NormalizedName = "INSTRUCTOR" }
             );
-
-
-
-
-
 
             // Seeding Users
             modelBuilder.Entity<ApplicationUser>().HasData(
@@ -124,29 +138,20 @@ namespace DAL.DB_Context
               }
           );
 
-
             // Seeding Courses
             modelBuilder.Entity<Course>().HasData(
-                    new Course {  Title = "Math 101", Description = "Basic mathematics", Duration = TimeSpan.FromHours(50) , Details = "That is a course that cover the fundamentals of mathematics "  , Level= "Beginner" , Path = "pathx"},
-                    new Course { Title = "Physics 101", Description = "Basic physics", Duration = TimeSpan.FromHours(150) , Details= "That is a course that cover the fundamentals of Physics " , Level = "Beginner", Path = "pathy" },
-                    new Course { Title = "Computer Science 101", Description = "Introduction to Computer Science", Duration = TimeSpan.FromHours(120) , Details = "That is a course that cover the fundamentals of Computer Science " , Level= "Beginner", Path = "pathz" }
+                    new Course { Id = 1, Title = "Math 101", Description = "Basic mathematics", Duration = TimeSpan.FromHours(50), Details = "That is a course that cover the fundamentals of mathematics", Level = "Beginner", Path = "pathx", ThumbnailUrl = "fakeurl" },
+                    new Course { Id = 2, Title = "Physics 101", Description = "Basic physics", Duration = TimeSpan.FromHours(150), Details = "That is a course that cover the fundamentals of Physics", Level = "Beginner", Path = "pathy", ThumbnailUrl = "fakeurl" },
+                    new Course { Id = 3, Title = "Computer Science 101", Description = "Introduction to Computer Science", Duration = TimeSpan.FromHours(120), Details = "That is a course that cover the fundamentals of Computer Science", Level = "Beginner", Path = "pathz", ThumbnailUrl = "fakeurl" }
             );
-
-            base.OnModelCreating(modelBuilder);
-
         }
 
-
-
-        
         private static string HashPassword(UserManager<ApplicationUser> userManager, string password)
         {
             var hasher = new PasswordHasher<ApplicationUser>();
             var hashedPassword = hasher.HashPassword(null, password);
             return hashedPassword;
         }
-    
-
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Category> Categories { get; set; }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Data.Models
 {
-    public class CourseUnit 
+    public class CourseUnit : BaseEntity
     {
        
         [MaxLength(50)]

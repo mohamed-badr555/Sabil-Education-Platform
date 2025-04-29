@@ -1,4 +1,6 @@
-﻿using DAL.Data.Models;
+﻿using DAL;
+using DAL.Data.Models;
+using DAL.Data.Repository.Models;
 using DAL.DB_Context;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,9 +22,25 @@ namespace DAL.Repositories
             _dbSet = _dbContext.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec)
+           => await ApplySpecification(spec).ToListAsync();
+
+
+        public async Task<T> GetByIdWithSpecAsync(ISpecification<T> spec)
+           => await ApplySpecification(spec).FirstOrDefaultAsync();
+
+
+        public async Task<int> GetCountAsync(ISpecification<T> spec)
+            => await ApplySpecification(spec).CountAsync();
+
+        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        {
+            return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>().AsQueryable(), spec);
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -53,5 +71,6 @@ namespace DAL.Repositories
         {
             return await _dbContext.Set<T>().AnyAsync(predicate);
         }
+
     }
 }
