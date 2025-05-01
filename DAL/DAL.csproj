@@ -12,9 +12,12 @@
     <None Remove="Repositories\**" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Compile Include="Repositories\**" />
-	</ItemGroup>
+  <ItemGroup>
+    <Compile Include="Repositories\BasketRepo\BasketRepository.cs" />
+    <Compile Include="Repositories\BasketRepo\IBasketRepository.cs" />
+    <Compile Include="Repositories\GenericRepository.cs" />
+    <Compile Include="Repositories\IGenericRepository.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
