@@ -1,4 +1,5 @@
-﻿using DAL.Data.Models;
+﻿using DAL;
+using DAL.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,20 @@ namespace DAL.Repositories
 {
     public interface IGenericRepository<T> where T :BaseEntity
     {
-        
 
-        Task<IEnumerable<T>> GetAllAsync();
+
+        Task<List<T>> GetAllAsync();
         Task<T> GetByIdAsync(int id);
+
+        Task<T> GetByIdWithSpecAsync(ISpecification<T> spec);
+        Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec);
+
+        Task<int> GetCountAsync(ISpecification<T> spec);
+
         Task InsertAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+
     }
 }

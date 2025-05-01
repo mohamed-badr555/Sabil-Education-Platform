@@ -32,10 +32,9 @@ namespace DAL.Data.Models
         public string? Intro_Video { get; set; }   //  
         [MaxLength(300)]
         public int Num_Units { get; set; }
+        [MaxLength(300)]
+        public string ThumbnailUrl { get; set; }    // New !!!
 
-        [Required(ErrorMessage = "Image Is Required")]
-        [Display(Name = "Image Name")]
-        public string ImageName { get; set; }
 
         #region Category - Course (1-M)
         public int? CategoryID { get; set; } //Foreign key
