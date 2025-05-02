@@ -3,7 +3,10 @@ using BLL.DTOs;
 using BLL.Specifications.Courses;
 using DAL.Data.Models;
 using DAL.Repositories;
+using DAL.Repositories.CourseRepo;
+using DAL.Repositories.VideoRepo;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +18,19 @@ namespace BLL.Managers.CourseManager
 {
     public class CourseManager : ICourseManager
     {
-        private readonly IGenericRepository<Course> _courseRepo;
+        private readonly ICourseRepo _courseRepo;
         private readonly IGenericRepository<Category> categoryRepo;
+        private readonly IVideoRepo videoRepo;
         private readonly IMapper mapper;
+        private readonly IMemoryCache memoryCache;
 
-        public CourseManager(IGenericRepository<Course> courseRepo, IGenericRepository<Category> categoryRepo, IMapper mapper)
+        public CourseManager(ICourseRepo courseRepo, IGenericRepository<Category> categoryRepo, IVideoRepo _videoRepo, IMapper mapper , IMemoryCache memoryCache)
         {
             _courseRepo = courseRepo;
             this.categoryRepo = categoryRepo;
+            videoRepo = _videoRepo;
             this.mapper = mapper;
+            this.memoryCache = memoryCache;
         }
 
 
@@ -53,25 +60,38 @@ namespace BLL.Managers.CourseManager
 
         public async Task<Pagination<CourseListDTO>> GetPopularAsync()
         {
+            const string cacheKey = "popular_courses";
+
+            // Try to get from cache first
+            if (memoryCache.TryGetValue(cacheKey, out Pagination<CourseListDTO> cachedResult))
+            {
+                return cachedResult;
+            }
+
+            // Cache miss - proceed with normal operation
             var spec = new PopularCourseSpecification();
             var courses = await _courseRepo.GetAllWithSpecAsync(spec);
+            var data = mapper.Map<IEnumerable<Course>, IEnumerable<CourseListDTO>>(courses);
 
-            var Data = mapper.Map<IEnumerable<Course>, IEnumerable<CourseListDTO>>(courses);
+            var result = new Pagination<CourseListDTO>(1, 5, 5, data);
 
-            return new Pagination<CourseListDTO>(1, 5 , 5, Data);
+            // Set cache options
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetSlidingExpiration(TimeSpan.FromMinutes(30)) // Cache for 30 minutes
+                .SetAbsoluteExpiration(TimeSpan.FromHours(1));   // Maximum cache duration
+
+            // Save data in cache
+            memoryCache.Set(cacheKey, result, cacheOptions);
+
+            return result;
         }
-
-
-
-       
-
-        public async Task<CourseDetailsDTO> GetByIdAsync(int id)
+        public async Task<CourseContentDTO> GetByIdAsync(string id)
         {
             var CourseModel = await _courseRepo.GetByIdAsync(id);
             if (CourseModel == null)
                 throw new KeyNotFoundException($"Course with ID {id} not found.");
 
-            var CourseDto = mapper.Map<CourseDetailsDTO>(CourseModel);
+            var CourseDto = mapper.Map<CourseContentDTO>(CourseModel);
             return CourseDto;
         }
 
@@ -81,43 +101,6 @@ namespace BLL.Managers.CourseManager
             var course = mapper.Map<Course>(course_dto);
             await _courseRepo.InsertAsync(course);
         }
-
-        public async Task<List<CourseListDTO>> SearchCoursesAsync(string searchTerm)
-        {
-            var courses = await _courseRepo.GetAllAsync();
-            var courses_dtos = mapper.Map<List<CourseListDTO>>(courses);
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                searchTerm = searchTerm.ToLower();
-
-                courses_dtos = courses_dtos
-                    .Where(c => c.Title.ToLower().Contains(searchTerm) ||
-                                c.Description.ToLower().Contains(searchTerm))
-                    .ToList();
-            }
-
-            return courses_dtos;
-        }
-
-
-        public async Task<List<CourseListDTO>> FilterCoursesAsync(string level, string category)
-        {
-            var courses = await _courseRepo.GetAllAsync();
-            var courseDTOs = mapper.Map<List<CourseListDTO>>(courses);
-
-            if (!string.IsNullOrWhiteSpace(level))
-                level = level.ToLower();
-            if (!string.IsNullOrWhiteSpace(category))
-                category = category.ToLower();
-
-            courseDTOs = courseDTOs.Where(c =>
-                (string.IsNullOrWhiteSpace(level) || c.Level.ToLower().Contains(level)) &&
-                (string.IsNullOrWhiteSpace(category) || c.CategoryName.ToLower().Contains(category))
-            ).ToList();
-
-            return courseDTOs;
-        }
-
 
 
         public async Task UpdateAsync(CourseAddDTO CourseDTO)
@@ -131,22 +114,61 @@ namespace BLL.Managers.CourseManager
 
             mapper.Map(CourseDTO, course); // maps *into* the existing object
 
-
+            // Invalidate the cache
+            memoryCache.Remove("popular_courses");
             await _courseRepo.UpdateAsync(course);
         }
 
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
             var course = await _courseRepo.GetByIdAsync(id);
             if (course == null)
                 throw new KeyNotFoundException($"Course with ID {id} not found.");
 
+            // Invalidate the cache
+            memoryCache.Remove("popular_courses");
             await _courseRepo.DeleteAsync(course);
         }
 
-       
+        public async Task<VideoDetailsDTO> GetVideoAsync(string coursePath, int unitOrderIndex, int videoOrderIndex)
+        {
+            var video = await videoRepo.GetVideoByCoursePathAndIndicesAsync(coursePath, unitOrderIndex, videoOrderIndex);
+
+            if (video == null)
+            {
+                return null; // Or throw an exception, depending on your error handling strategy
+            }
+            var videoDto = mapper.Map<VideoDetailsDTO>(video);
+            return videoDto;
+
+        }
+
+        public async Task<CourseContentDTO> GetCourseContentAsync(string coursePath, string userId = null)
+        {
+            var course = await _courseRepo.GetCourseByPathAsync(coursePath,userId);
+
+            if (course == null)
+                return null;
+
+            var dto = mapper.Map<CourseContentDTO>(course);
+
+            //// Add user-specific progress if userId is provided
+            //if (!string.IsNullOrEmpty(userId))
+            //{
+            //    var userCourse = course.CourseAccounts.FirstOrDefault(ca => ca.UserId == userId);
+            //    if (userCourse != null)
+            //    {
+            //        // Here you would map video completion status
+            //        // Requires additional data model for tracking video progress
+            //        dto.progress = userCourse.Progress;
+            //    }
+            //}
+
+            return dto;
+        }
     }
+
 
     public class Pagination<T>
     {

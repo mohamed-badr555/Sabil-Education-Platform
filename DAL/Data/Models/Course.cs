@@ -37,7 +37,7 @@ namespace DAL.Data.Models
 
 
         #region Category - Course (1-M)
-        public int? CategoryID { get; set; } //Foreign key
+        public string? CategoryID { get; set; } //Foreign key
         public Category Category { get; set; }
         #endregion
 

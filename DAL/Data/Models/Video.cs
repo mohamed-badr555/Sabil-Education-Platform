@@ -19,7 +19,7 @@ namespace DAL.Data.Models
         public int order { get; set; }
 
         #region Video - CourseUnitID (M-1)
-        public int CourseUnitID { get; set; } //Foreign key
+        public string CourseUnitID { get; set; } //Foreign key
         public CourseUnit CourseUnit { get; set; }
         #endregion
 
@@ -28,7 +28,7 @@ namespace DAL.Data.Models
         #endregion
 
         #region Video - Exam (1-1)
-        public int? ExamID { get; set; }
+        public string? ExamID { get; set; }
         public Exam Exam { get; set; }
         #endregion
     }

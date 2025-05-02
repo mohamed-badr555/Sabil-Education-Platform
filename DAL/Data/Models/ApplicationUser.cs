@@ -43,7 +43,7 @@ namespace DAL.Data.Models
         // 👇 One-to-Many: Answers
         public ICollection<AccountAnswer> AccountAnswers { get; set; }
 
-
+        public ICollection<VideoComment> Comments { get; set; }
     }
     public enum Gender
     {

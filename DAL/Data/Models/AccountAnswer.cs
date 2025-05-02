@@ -10,9 +10,9 @@ namespace DAL.Data.Models
     public class AccountAnswer :BaseEntity
     {
        
-        public int ExamId { get; set; }
-        public int AccountId { get; set; }        
-        public int QuestionId { get; set; }        
+        public string ExamId { get; set; }
+        public string AccountId { get; set; }        
+        public string? QuestionId { get; set; }        
         [MaxLength(100)]
         public string Answer { get; set; }
         public bool IsCorrect { get; set; }

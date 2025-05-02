@@ -21,7 +21,7 @@ namespace BLL.Specifications.Courses
         }
 
         public string? Sort { get; set; }
-        public int? CategoryId { get; set; }
+        public string? CategoryId { get; set; }
         public string? Level { get; set; }
 
 

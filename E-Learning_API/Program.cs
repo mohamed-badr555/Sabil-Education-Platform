@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using BLL.Managers.CourseManager;
-using BLL.Managers.EnrollmentManager;
+using System.Text.Json.Serialization;
+using DAL.Repositories.VideoRepo;
+using DAL.Repositories.CourseRepo;
 
 
 
@@ -20,10 +22,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(CourseMappingProfile).Assembly);
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IVideoRepo, VideoRepo>();
+builder.Services.AddScoped<ICourseRepo, CourseRepo>();
+
+
+
 
 
 builder.Services.AddScoped<ICourseManager,CourseManager>();
-builder.Services.AddScoped<IEnrollmentManager, EnrollmentManager>();
+
+
+
+builder.Services.AddMemoryCache();
+
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -48,8 +59,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

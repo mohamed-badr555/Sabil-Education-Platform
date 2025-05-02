@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class youssef : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,8 +64,7 @@ namespace DAL.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -77,8 +76,7 @@ namespace DAL.Migrations
                 name: "Exams",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     SuccessGrade = table.Column<float>(type: "real", nullable: false),
                     FullMark = table.Column<float>(type: "real", nullable: false),
@@ -199,8 +197,7 @@ namespace DAL.Migrations
                 name: "Courses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Level = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     N_Lessons = table.Column<int>(type: "int", nullable: false),
@@ -216,7 +213,7 @@ namespace DAL.Migrations
                     Intro_Video = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Num_Units = table.Column<int>(type: "int", maxLength: 300, nullable: false),
                     ThumbnailUrl = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    CategoryID = table.Column<int>(type: "int", nullable: true)
+                    CategoryID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -232,7 +229,7 @@ namespace DAL.Migrations
                 name: "CourseAccounts",
                 columns: table => new
                 {
-                    CourseID = table.Column<int>(type: "int", nullable: false),
+                    CourseID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FinishedUnits = table.Column<int>(type: "int", nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
@@ -242,7 +239,7 @@ namespace DAL.Migrations
                     LastVideo = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     RateText = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: true),
                     RateStars = table.Column<int>(type: "int", nullable: true),
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -252,25 +249,24 @@ namespace DAL.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CourseAccounts_Courses_CourseID",
                         column: x => x.CourseID,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "CourseUnits",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: false),
                     Order = table.Column<int>(type: "int", nullable: false),
-                    CourseID = table.Column<int>(type: "int", nullable: false)
+                    CourseID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -287,14 +283,13 @@ namespace DAL.Migrations
                 name: "Videos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: true),
                     URL = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: false),
                     order = table.Column<int>(type: "int", nullable: false),
-                    CourseUnitID = table.Column<int>(type: "int", nullable: false),
-                    ExamID = table.Column<int>(type: "int", nullable: true)
+                    CourseUnitID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ExamID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -309,23 +304,28 @@ namespace DAL.Migrations
                         name: "FK_Videos_Exams_ExamID",
                         column: x => x.ExamID,
                         principalTable: "Exams",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "VideoComments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(3000)", maxLength: 3000, nullable: true),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    VideoId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    VideoId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VideoComments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_VideoComments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_VideoComments_Videos_VideoId",
                         column: x => x.VideoId,
@@ -338,11 +338,10 @@ namespace DAL.Migrations
                 name: "AccountAnswers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExamId = table.Column<int>(type: "int", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    QuestionId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ExamId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    QuestionId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Answer = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
@@ -367,10 +366,9 @@ namespace DAL.Migrations
                 name: "QuestionChoices",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    QuestionID = table.Column<int>(type: "int", nullable: true)
+                    QuestionID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -381,12 +379,11 @@ namespace DAL.Migrations
                 name: "Questions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Mark = table.Column<float>(type: "real", nullable: false),
-                    ExamID = table.Column<int>(type: "int", nullable: false),
-                    CorrectChoiceID = table.Column<int>(type: "int", nullable: false)
+                    ExamID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CorrectChoiceID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -401,8 +398,7 @@ namespace DAL.Migrations
                         name: "FK_Questions_QuestionChoices_CorrectChoiceID",
                         column: x => x.CorrectChoiceID,
                         principalTable: "QuestionChoices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -410,24 +406,24 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1ab4f2da-c0e5-4f57-b8f2-dbf0653e1db0", null, "Admin", "ADMIN" },
-                    { "56d859b7-61fa-460f-b678-91bd8a1f2128", null, "User", "USER" },
-                    { "7ea9d6b0-14d7-4f55-9a57-39bb9adc584c", null, "Instructor", "INSTRUCTOR" }
+                    { "3652373c-ff98-4b22-b3c3-6fe380640883", null, "Admin", "ADMIN" },
+                    { "4dca8bf3-df38-410c-aebd-91aa32c2d9c6", null, "Instructor", "INSTRUCTOR" },
+                    { "92db6509-4eff-4512-994a-fb5d7053bfd9", null, "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "Birthdate", "ConcurrencyStamp", "Country", "EduLevel", "Email", "EmailConfirmed", "Fname", "Gender", "ImageUrl", "Lname", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "admin-user-id", 0, null, new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "e389545a-53ed-4c29-8b12-df9087b8cb20", "USA", "Master's", "admin@example.com", false, "Admin", 0, null, "User", false, null, "ADMIN@EXAMPLE.COM", "ADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEGr0+1+VXjUrMzJ8zodCm8KYOred74XAonzLQoD/VgtTlAVlpePHdxvrciNA2XekXA==", null, false, "57206db3-2ec5-460b-824a-e5b139067046", false, "admin@example.com" });
+                values: new object[] { "admin-user-id", 0, null, new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "e7fd4c9a-d9e8-4591-b3bc-09e46fa6ea96", "USA", "Master's", "admin@example.com", false, "Admin", 0, null, "User", false, null, "ADMIN@EXAMPLE.COM", "ADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEJVKxtMsoIbkf75Ag5o0cSf92uz2ZLTIaAB8Nb2etSq3s7muY7JSvtYrb3wro+OHQg==", null, false, "41eb10f5-cfda-466b-b09d-2cfd9ded2c34", false, "admin@example.com" });
 
             migrationBuilder.InsertData(
                 table: "Courses",
                 columns: new[] { "Id", "CategoryID", "Description", "Details", "Duration", "Intro_Video", "IsFree", "IsPublished", "Last_Update", "Level", "N_Lessons", "Num_Units", "Path", "Price", "Rating", "ThumbnailUrl", "Title" },
                 values: new object[,]
                 {
-                    { 1, null, "Basic mathematics", "That is a course that cover the fundamentals of mathematics", new TimeSpan(2, 2, 0, 0, 0), null, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathx", 0f, 0, "fakeurl", "Math 101" },
-                    { 2, null, "Basic physics", "That is a course that cover the fundamentals of Physics", new TimeSpan(6, 6, 0, 0, 0), null, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathy", 0f, 0, "fakeurl", "Physics 101" },
-                    { 3, null, "Introduction to Computer Science", "That is a course that cover the fundamentals of Computer Science", new TimeSpan(5, 0, 0, 0, 0), null, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathz", 0f, 0, "fakeurl", "Computer Science 101" }
+                    { "1", null, "Basic mathematics", "That is a course that cover the fundamentals of mathematics", new TimeSpan(2, 2, 0, 0, 0), null, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathx", 0f, 0, "fakeurl", "Math 101" },
+                    { "2", null, "Basic physics", "That is a course that cover the fundamentals of Physics", new TimeSpan(6, 6, 0, 0, 0), null, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathy", 0f, 0, "fakeurl", "Physics 101" },
+                    { "3", null, "Introduction to Computer Science", "That is a course that cover the fundamentals of Computer Science", new TimeSpan(5, 0, 0, 0, 0), null, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathz", 0f, 0, "fakeurl", "Computer Science 101" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -508,12 +504,18 @@ namespace DAL.Migrations
                 name: "IX_Questions_CorrectChoiceID",
                 table: "Questions",
                 column: "CorrectChoiceID",
-                unique: true);
+                unique: true,
+                filter: "[CorrectChoiceID] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_ExamID",
                 table: "Questions",
                 column: "ExamID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VideoComments_UserId",
+                table: "VideoComments",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VideoComments_VideoId",
@@ -533,12 +535,11 @@ namespace DAL.Migrations
                 filter: "[ExamID] IS NOT NULL");
 
             migrationBuilder.AddForeignKey(
-            name: "FK_AccountAnswers_Questions_QuestionId",
-            table: "AccountAnswers",
-            column: "QuestionId",
-            principalTable: "Questions",
-            principalColumn: "Id",
-            onDelete: ReferentialAction.NoAction); // Change from default Cascade to NoAction
+                name: "FK_AccountAnswers_Questions_QuestionId",
+                table: "AccountAnswers",
+                column: "QuestionId",
+                principalTable: "Questions",
+                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_QuestionChoices_Questions_QuestionID",
@@ -546,7 +547,7 @@ namespace DAL.Migrations
                 column: "QuestionID",
                 principalTable: "Questions",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />

@@ -19,6 +19,7 @@ namespace E_Learning_API.Controllers
             _courseMananger = courseMananger;
         }
 
+
         [HttpGet]             // matches GET /courses
         public async Task<ActionResult<Pagination<CourseListDTO>>> GetAllAsync([FromQuery] CourseSpecsParams courseparams)
         {
@@ -46,40 +47,13 @@ namespace E_Learning_API.Controllers
 
 
 
-        //[HttpGet("paged")]
-        //public async Task<ActionResult<Pagination<CourseListDTO>>> GetPagedCourses(int page = 1, int pageSize = 10)
-        //{
-         
-        //        var result = await _courseMananger.GetPagedCoursesAsync(page, pageSize);
-        //        return Ok(result); // Return the paged result
-       
-        //}
-
-
-
-
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetById(int Id)
+        public async Task<IActionResult> GetById(string Id)
         {
             var course = await _courseMananger.GetByIdAsync(Id);
             if (course == null)
                 return NotFound();
             return Ok(course);
-        }
-
-
-        [HttpGet("search")]
-        public async Task<IActionResult> Search([FromQuery] string searchTerm)
-        {
-            var courses = await _courseMananger.SearchCoursesAsync(searchTerm);
-            return Ok(courses);
-        }
-
-        [HttpGet("filter")]
-        public async Task<IActionResult> FilterCourses([FromQuery] string? level, [FromQuery] string? category)
-        {
-            var courses = await _courseMananger.FilterCoursesAsync(level, category);
-            return Ok(courses);
         }
 
 
@@ -95,7 +69,7 @@ namespace E_Learning_API.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCourse(int id, CourseAddDTO course)
+        public async Task<IActionResult> UpdateCourse(string id, CourseAddDTO course)
         {
             if (id != course.Id)
                 return BadRequest();
@@ -110,7 +84,7 @@ namespace E_Learning_API.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourse(int id)
+        public async Task<IActionResult> DeleteCourse(string id)
         {
             var course = await _courseMananger.GetByIdAsync(id);
             if (course == null)
@@ -119,6 +93,45 @@ namespace E_Learning_API.Controllers
             await _courseMananger.DeleteAsync(id);
             return NoContent();
         }
+
+
+        [HttpGet("{coursePath}/units/{unitOrderIndex}/videos/{videoOrderIndex}")]
+        public async Task<IActionResult> GetVideo(string coursePath, int unitOrderIndex, int videoOrderIndex)
+        {
+            var video = await _courseMananger.GetVideoAsync(coursePath, unitOrderIndex, videoOrderIndex);
+
+            if (video == null)
+            {
+                return NotFound(new { Message = "Video not found." });
+            }
+
+            return Ok(new
+            {
+                Code = 200,
+                Message = "Video retrieved successfully",
+                Data = video
+            });
+        }
+
+
+        [HttpGet("{coursePath}/content")]
+        public async Task<IActionResult> GetCourseContent(string coursePath)
+        {
+            var content = await _courseMananger.GetCourseContentAsync(coursePath);
+
+            if (content == null)
+            {
+                return NotFound(new { Message = "content not found." });
+            }
+
+            return Ok(new
+            {
+                Code = 200,
+                Message = "content retrieved successfully",
+                Data = content
+            });
+        }
+
     }
 
 

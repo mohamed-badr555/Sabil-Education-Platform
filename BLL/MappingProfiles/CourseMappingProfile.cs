@@ -13,8 +13,8 @@ namespace BLL.MappingProfiles
     {
         public CourseMappingProfile()
         {
-            CreateMap<Course, CourseDetailsDTO>().ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
-            CreateMap<CourseDetailsDTO, Course>();
+            //CreateMap<Course, CourseContentDTO>().ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
+            //CreateMap<CourseContentDTO, Course>();
 
             CreateMap<Course, CourseListDTO>().ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
             CreateMap<CourseListDTO, Course>();
@@ -23,6 +23,18 @@ namespace BLL.MappingProfiles
             CreateMap<CourseAddDTO, Course>();
 
             CreateMap<Category,CategoryReadDTO>();
+
+            CreateMap<Video, VideoDetailsDTO>()
+       .ForMember(dest => dest.unitorder,
+                  opt => opt.MapFrom(src => src.CourseUnit.Order));
+
+
+            CreateMap<CourseUnit, UnitDTO>();
+            CreateMap<Course, CourseContentDTO>()
+            .ForMember(dest => dest.StudentsCount, opt => opt.MapFrom(src => src.CourseAccounts.Count))
+            .ForMember(dest => dest.Units, opt => opt.MapFrom(src => src.CourseUnits));
         }
+
+
     }
 }

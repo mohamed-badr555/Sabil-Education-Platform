@@ -16,7 +16,7 @@ namespace DAL.Data.Models
 
         #region QuestionChoices - Question (M-1)
         //M-1
-        public int? QuestionID { get; set; } //Foreign key 
+        public string? QuestionID { get; set; } //Foreign key 
 
         public Question Question { get; set; }
         #endregion

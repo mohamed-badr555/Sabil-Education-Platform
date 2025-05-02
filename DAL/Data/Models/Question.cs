@@ -19,7 +19,7 @@ namespace DAL.Data.Models
         public float Mark { get; set; }
 
         #region Question - Exam (M-1)
-        public int ExamID { get; set; }//Forign key
+        public string ExamID { get; set; }//Forign key
         public Exam Exam { get; set; }
         #endregion
 
@@ -31,7 +31,7 @@ namespace DAL.Data.Models
         #region Question - QuestionChoices (1-1)
         //1-1
 
-        public int CorrectChoiceID { get; set; }
+        public string? CorrectChoiceID { get; set; }
 
 
         public QuestionChoice CorrectChoice { get; set; }

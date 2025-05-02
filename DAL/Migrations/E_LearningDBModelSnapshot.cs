@@ -24,28 +24,27 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.AccountAnswer", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Answer")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("ExamId")
-                        .HasColumnType("int");
+                    b.Property<string>("ExamId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
+                    b.Property<string>("QuestionId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -165,7 +164,7 @@ namespace DAL.Migrations
                             Id = "admin-user-id",
                             AccessFailedCount = 0,
                             Birthdate = new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "e389545a-53ed-4c29-8b12-df9087b8cb20",
+                            ConcurrencyStamp = "e7fd4c9a-d9e8-4591-b3bc-09e46fa6ea96",
                             Country = "USA",
                             EduLevel = "Master's",
                             Email = "admin@example.com",
@@ -176,9 +175,9 @@ namespace DAL.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGr0+1+VXjUrMzJ8zodCm8KYOred74XAonzLQoD/VgtTlAVlpePHdxvrciNA2XekXA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJVKxtMsoIbkf75Ag5o0cSf92uz2ZLTIaAB8Nb2etSq3s7muY7JSvtYrb3wro+OHQg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "57206db3-2ec5-460b-824a-e5b139067046",
+                            SecurityStamp = "41eb10f5-cfda-466b-b09d-2cfd9ded2c34",
                             TwoFactorEnabled = false,
                             UserName = "admin@example.com"
                         });
@@ -186,11 +185,8 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -204,14 +200,11 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.Course", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CategoryID")
-                        .HasColumnType("int");
+                    b.Property<string>("CategoryID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -281,7 +274,7 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = "1",
                             Description = "Basic mathematics",
                             Details = "That is a course that cover the fundamentals of mathematics",
                             Duration = new TimeSpan(2, 2, 0, 0, 0),
@@ -299,7 +292,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = "2",
                             Description = "Basic physics",
                             Details = "That is a course that cover the fundamentals of Physics",
                             Duration = new TimeSpan(6, 6, 0, 0, 0),
@@ -317,7 +310,7 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = "3",
                             Description = "Introduction to Computer Science",
                             Details = "That is a course that cover the fundamentals of Computer Science",
                             Duration = new TimeSpan(5, 0, 0, 0, 0),
@@ -340,8 +333,8 @@ namespace DAL.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CourseID")
-                        .HasColumnType("int");
+                    b.Property<string>("CourseID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<TimeSpan>("CompTime")
                         .HasColumnType("time");
@@ -349,8 +342,8 @@ namespace DAL.Migrations
                     b.Property<int>("FinishedUnits")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsCompleted")
                         .HasColumnType("bit");
@@ -381,14 +374,12 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.CourseUnit", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseID")
-                        .HasColumnType("int");
+                    b.Property<string>("CourseID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -412,11 +403,8 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.Exam", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<float>("FullMark")
                         .HasColumnType("real");
@@ -440,17 +428,15 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.Question", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("CorrectChoiceID")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CorrectChoiceID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ExamID")
-                        .HasColumnType("int");
+                    b.Property<string>("ExamID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<float>("Mark")
                         .HasColumnType("real");
@@ -463,7 +449,8 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CorrectChoiceID")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[CorrectChoiceID] IS NOT NULL");
 
                     b.HasIndex("ExamID");
 
@@ -472,14 +459,11 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.QuestionChoice", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("QuestionID")
-                        .HasColumnType("int");
+                    b.Property<string>("QuestionID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -495,21 +479,19 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.Video", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseUnitID")
-                        .HasColumnType("int");
+                    b.Property<string>("CourseUnitID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1500)
                         .HasColumnType("nvarchar(1500)");
 
-                    b.Property<int?>("ExamID")
-                        .HasColumnType("int");
+                    b.Property<string>("ExamID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -537,11 +519,8 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.VideoComment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Text")
                         .HasMaxLength(3000)
@@ -550,10 +529,17 @@ namespace DAL.Migrations
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VideoId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("VideoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("VideoId");
 
@@ -589,19 +575,19 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1ab4f2da-c0e5-4f57-b8f2-dbf0653e1db0",
+                            Id = "3652373c-ff98-4b22-b3c3-6fe380640883",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "56d859b7-61fa-460f-b678-91bd8a1f2128",
+                            Id = "92db6509-4eff-4512-994a-fb5d7053bfd9",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "7ea9d6b0-14d7-4f55-9a57-39bb9adc584c",
+                            Id = "4dca8bf3-df38-410c-aebd-91aa32c2d9c6",
                             Name = "Instructor",
                             NormalizedName = "INSTRUCTOR"
                         });
@@ -724,8 +710,7 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Data.Models.Question", "Question")
                         .WithMany("AccountAnswers")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("DAL.Data.Models.ApplicationUser", "User")
                         .WithMany("AccountAnswers")
@@ -752,13 +737,13 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Data.Models.Course", "course")
                         .WithMany("CourseAccounts")
                         .HasForeignKey("CourseID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DAL.Data.Models.ApplicationUser", "User")
                         .WithMany("CourseAccounts")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -781,9 +766,7 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Data.Models.QuestionChoice", "CorrectChoice")
                         .WithOne()
-                        .HasForeignKey("DAL.Data.Models.Question", "CorrectChoiceID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("DAL.Data.Models.Question", "CorrectChoiceID");
 
                     b.HasOne("DAL.Data.Models.Exam", "Exam")
                         .WithMany("Questions")
@@ -801,7 +784,7 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Data.Models.Question", "Question")
                         .WithMany("QuestionChoices")
                         .HasForeignKey("QuestionID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Question");
                 });
@@ -816,8 +799,7 @@ namespace DAL.Migrations
 
                     b.HasOne("DAL.Data.Models.Exam", "Exam")
                         .WithOne("Video")
-                        .HasForeignKey("DAL.Data.Models.Video", "ExamID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("DAL.Data.Models.Video", "ExamID");
 
                     b.Navigation("CourseUnit");
 
@@ -826,13 +808,21 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.VideoComment", b =>
                 {
-                    b.HasOne("DAL.Data.Models.Video", "video")
+                    b.HasOne("DAL.Data.Models.ApplicationUser", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Data.Models.Video", "Video")
                         .WithMany("VideoComments")
                         .HasForeignKey("VideoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("video");
+                    b.Navigation("User");
+
+                    b.Navigation("Video");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -889,6 +879,8 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Data.Models.ApplicationUser", b =>
                 {
                     b.Navigation("AccountAnswers");
+
+                    b.Navigation("Comments");
 
                     b.Navigation("CourseAccounts");
                 });

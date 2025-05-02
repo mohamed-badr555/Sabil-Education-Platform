@@ -16,8 +16,8 @@ namespace BLL.Specifications.Courses
                     c.Title.ToLower().Contains(courseParams.Search) ||
                     c.Description.ToLower().Contains(courseParams.Search) ||
                     c.Details.ToLower().Contains(courseParams.Search)) &&
-                (!courseParams.CategoryId.HasValue ||
-                    c.CategoryID == courseParams.CategoryId.Value) &&
+                (string.IsNullOrEmpty(courseParams.CategoryId) ||
+                    c.CategoryID == courseParams.CategoryId) &&
                 (string.IsNullOrEmpty(courseParams.Level) ||
                     c.Level == courseParams.Level)
                  )
@@ -47,7 +47,7 @@ namespace BLL.Specifications.Courses
             }
         }
 
-        public CourseSpecifications(int id) : base(P => P.Id == id)
+        public CourseSpecifications(string id) : base(P => P.Id == id)
         {
             AddInclude(c => c.Category);
             AddOrderBy(c => c.Title);
