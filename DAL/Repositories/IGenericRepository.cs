@@ -11,7 +11,8 @@ namespace DAL.Repositories
 {
     public interface IGenericRepository<T> where T :BaseEntity
     {
-
+        object Courses { get; }
+        object Rates { get; set; }
 
         Task<List<T>> GetAllAsync();
         Task<T> GetByIdAsync(int id);
