@@ -15,11 +15,11 @@ namespace DAL.Data.Models.Basket
         public string ImageUrl { get; set; }
         public float Price { get; set; }
         public int Quantity { get; set; }
-        public int Type { get; set; } // 1: Course, 2: OnlineEdu, 3: Book
+        public int Type { get; set; } = 1;   // 1: Course, 2: OnlineEdu, 3: Book
         public string OnlineStudentId { get; set; } // Required if type == 2
 
-        // This property won't be populated in request but will be in response
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public float? PriceBefore { get; set; }
+        // For value types like float, use WhenWritingDefault instead of WhenWritingNull
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public float PriceBefore { get; set; }
     }
 }

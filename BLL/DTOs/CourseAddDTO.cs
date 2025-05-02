@@ -9,7 +9,7 @@ namespace BLL.DTOs
 {
     public class CourseAddDTO
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [MaxLength(100)]

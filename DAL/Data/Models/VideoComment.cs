@@ -15,7 +15,7 @@ namespace DAL.Data.Models
         public string? Text { get; set; }
         public DateTime Time { get; set; }
 
-        public int VideoId { get; set; }
+        public string VideoId { get; set; }
         public Video video { get; set; }
 
     }

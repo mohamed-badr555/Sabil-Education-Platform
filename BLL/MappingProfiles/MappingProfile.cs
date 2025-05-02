@@ -5,13 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTOs;
+using BLL.DTOs.Basket;
 using DAL.Data.Models;
+using DAL.Data.Models.Basket;
 
 namespace BLL.MappingProfiles
 {
-    public class CourseMappingProfile : Profile
+    public class MappingProfile : Profile
     {
-        public CourseMappingProfile()
+        public MappingProfile()
         {
             CreateMap<Course, CourseDetailsDTO>().ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
             CreateMap<CourseDetailsDTO, Course>();
@@ -23,6 +25,10 @@ namespace BLL.MappingProfiles
             CreateMap<CourseAddDTO, Course>();
 
             CreateMap<Category,CategoryReadDTO>();
+
+            CreateMap<BasketItem, BasketItemDto>().ReverseMap();
+            CreateMap<CustomerBasket, CustomerBasketDto>().ReverseMap();
+
         }
     }
 }

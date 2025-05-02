@@ -10,7 +10,7 @@ namespace DAL.Data.Models
     public class CourseAccount : BaseEntity
     {
         //NOOOOOOOOOTES 
-        public int CourseID { get; set; } //foreign key
+        public string CourseID { get; set; } //foreign key
         public Course course { get; set; }
 
         public string UserId { get; set; }//foreign key

@@ -14,7 +14,7 @@ namespace DAL.Repositories
 
 
         Task<List<T>> GetAllAsync();
-        Task<T> GetByIdAsync(int id);
+        Task<T?> GetByIdAsync(string id);
 
         Task<T> GetByIdWithSpecAsync(ISpecification<T> spec);
         Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec);

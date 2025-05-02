@@ -65,7 +65,7 @@ namespace BLL.Managers.CourseManager
 
        
 
-        public async Task<CourseDetailsDTO> GetByIdAsync(int id)
+        public async Task<CourseDetailsDTO> GetByIdAsync(string id)
         {
             var CourseModel = await _courseRepo.GetByIdAsync(id);
             if (CourseModel == null)
@@ -136,7 +136,7 @@ namespace BLL.Managers.CourseManager
         }
 
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
             var course = await _courseRepo.GetByIdAsync(id);
             if (course == null)

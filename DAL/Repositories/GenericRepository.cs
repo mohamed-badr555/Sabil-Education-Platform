@@ -43,9 +43,9 @@ namespace DAL.Repositories
             return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>().AsQueryable(), spec);
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(string id)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.FirstOrDefaultAsync(x => x.Id ==id);
         }
 
         public async Task InsertAsync(T entity)

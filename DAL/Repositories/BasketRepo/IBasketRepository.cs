@@ -10,9 +10,9 @@ namespace DAL.Repositories.BasketRepo
     public interface IBasketRepository
     {
 
-        Task<CustomerBasket> GetBasketAsync(string basketId);
-        Task<CustomerBasket> UpdateBasketAsync(CustomerBasket basket);
+        Task<CustomerBasket?> GetBasketAsync(string basketId);
+        Task<CustomerBasket?> UpdateBasketAsync(CustomerBasket basket);
         Task<bool> DeleteBasketAsync(string basketId);
-        Task<CustomerBasket> CreateBasketAsync();
+        Task<CustomerBasket?> CreateBasketAsync();
     }
 }

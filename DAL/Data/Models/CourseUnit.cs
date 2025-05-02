@@ -17,7 +17,7 @@ namespace DAL.Data.Models
         public int Order { get; set; }
 
         #region CourseUnit - Course (M-1)
-        public int CourseID { get; set; } //Foreign key
+        public string CourseID { get; set; } //Foreign key
         public Course Course { get; set; }
         #endregion
 

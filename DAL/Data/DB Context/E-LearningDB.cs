@@ -140,9 +140,9 @@ namespace DAL.DB_Context
 
             // Seeding Courses
             modelBuilder.Entity<Course>().HasData(
-                    new Course { Id = 1, Title = "Math 101", Description = "Basic mathematics", Duration = TimeSpan.FromHours(50), Details = "That is a course that cover the fundamentals of mathematics", Level = "Beginner", Path = "pathx", ThumbnailUrl = "fakeurl" },
-                    new Course { Id = 2, Title = "Physics 101", Description = "Basic physics", Duration = TimeSpan.FromHours(150), Details = "That is a course that cover the fundamentals of Physics", Level = "Beginner", Path = "pathy", ThumbnailUrl = "fakeurl" },
-                    new Course { Id = 3, Title = "Computer Science 101", Description = "Introduction to Computer Science", Duration = TimeSpan.FromHours(120), Details = "That is a course that cover the fundamentals of Computer Science", Level = "Beginner", Path = "pathz", ThumbnailUrl = "fakeurl" }
+                    new Course { Id = "1", Title = "Math 101", Description = "Basic mathematics", Duration = TimeSpan.FromHours(50), Details = "That is a course that cover the fundamentals of mathematics", Level = "Beginner", Path = "pathx", ThumbnailUrl = "fakeurl" },
+                    new Course { Id = "2", Title = "Physics 101", Description = "Basic physics", Duration = TimeSpan.FromHours(150), Details = "That is a course that cover the fundamentals of Physics", Level = "Beginner", Path = "pathy", ThumbnailUrl = "fakeurl" },
+                    new Course { Id = "3", Title = "Computer Science 101", Description = "Introduction to Computer Science", Duration = TimeSpan.FromHours(120), Details = "That is a course that cover the fundamentals of Computer Science", Level = "Beginner", Path = "pathz", ThumbnailUrl = "fakeurl" }
             );
         }
 
