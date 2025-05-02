@@ -35,6 +35,7 @@ namespace DAL.Data.Models
         [MaxLength(300)]
         public string ThumbnailUrl { get; set; }    // New !!!
 
+        public ICollection<Rate> Rates { get; set; } = new List<Rate>();
 
         #region Category - Course (1-M)
         public int? CategoryID { get; set; } //Foreign key

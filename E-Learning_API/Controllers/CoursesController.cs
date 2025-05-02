@@ -5,6 +5,8 @@ using BLL.Specifications.Courses;
 using DAL.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace E_Learning_API.Controllers
 {
@@ -119,6 +121,22 @@ namespace E_Learning_API.Controllers
             await _courseMananger.DeleteAsync(id);
             return NoContent();
         }
+
+        [HttpPost("{coursePath}/rate")]
+        public async Task<IActionResult> AddRateCourse(string coursePath, [FromBody] Rate rate)
+        {
+            var course = await _courseMananger.AddRateAsync(coursePath, rate);
+
+            if (course == null)
+                return NotFound($"No course found with path: {coursePath}");
+
+            return Ok(new
+            {
+                Message = "Rate added successfully to the course!",
+                Data = rate
+            });
+        }
+
     }
 
 
