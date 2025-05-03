@@ -1,0 +1,23 @@
+﻿
+@model BLL.DTOs.CategoryManagement.CategoryDTO
+
+<div class="modal-header">
+    <h1 class="modal-title fs-5" id="editCategoryLabel">Edit Category</h1>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form asp-action="Edit" method="post">
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" />
+        <div class="row g-2">
+            <div class="col-12">
+                <label class="form-label" asp-for="Name"></label>
+                <input placeholder="Edit Category Name" class="form-control" asp-for="Name">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>

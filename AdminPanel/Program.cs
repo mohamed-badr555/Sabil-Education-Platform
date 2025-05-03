@@ -1,5 +1,7 @@
+using BLL.Managers.CategoryManager;
 using DAL.Data.Models;
 using DAL.DB_Context;
+using DAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,16 +16,22 @@ namespace AdminPanel
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-
-
             builder.Services.AddDbContext<E_LearningDB>(option =>
             {
                 option.UseSqlServer(builder.Configuration.GetConnectionString("EDB"));
             });
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                          .AddEntityFrameworkStores<E_LearningDB>();
 
+            // Register repository services
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            // Register your manager services
+            builder.Services.AddScoped<ICategoryManager, CategoryManager>();
+
+            // Register AutoMapper if you're using it (assuming you have a MappingProfile class)
+            builder.Services.AddAutoMapper(typeof(BLL.MappingProfiles.MappingProfile).Assembly);
 
             var app = builder.Build();
 

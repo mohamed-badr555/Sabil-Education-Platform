@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTOs;
 using BLL.DTOs.Basket;
+using BLL.DTOs.CategoryManagement;
 using DAL.Data.Models;
 using DAL.Data.Models.Basket;
 
@@ -28,6 +29,11 @@ namespace BLL.MappingProfiles
 
             CreateMap<BasketItem, BasketItemDto>().ReverseMap();
             CreateMap<CustomerBasket, CustomerBasketDto>().ReverseMap();
+
+
+            CreateMap<Category, CategoryDTO>();
+            CreateMap<CategoryDTO, Category>()
+                .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id)));
 
         }
     }

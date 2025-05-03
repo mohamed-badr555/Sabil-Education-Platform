@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class youssef : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,9 +64,10 @@ namespace DAL.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,12 +78,13 @@ namespace DAL.Migrations
                 name: "Exams",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     SuccessGrade = table.Column<float>(type: "real", nullable: false),
                     FullMark = table.Column<float>(type: "real", nullable: false),
-                    TimeInMinutes = table.Column<TimeSpan>(type: "time", maxLength: 30, nullable: false)
+                    TimeInMinutes = table.Column<TimeSpan>(type: "time", maxLength: 30, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -199,8 +201,7 @@ namespace DAL.Migrations
                 name: "Courses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Level = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     N_Lessons = table.Column<int>(type: "int", nullable: false),
@@ -216,7 +217,9 @@ namespace DAL.Migrations
                     Intro_Video = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Num_Units = table.Column<int>(type: "int", maxLength: 300, nullable: false),
                     ThumbnailUrl = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    CategoryID = table.Column<int>(type: "int", nullable: true)
+                    CategoryID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -232,7 +235,7 @@ namespace DAL.Migrations
                 name: "CourseAccounts",
                 columns: table => new
                 {
-                    CourseID = table.Column<int>(type: "int", nullable: false),
+                    CourseID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FinishedUnits = table.Column<int>(type: "int", nullable: false),
                     IsCompleted = table.Column<bool>(type: "bit", nullable: false),
@@ -242,7 +245,9 @@ namespace DAL.Migrations
                     LastVideo = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     RateText = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: true),
                     RateStars = table.Column<int>(type: "int", nullable: true),
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -265,12 +270,13 @@ namespace DAL.Migrations
                 name: "CourseUnits",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: false),
                     Order = table.Column<int>(type: "int", nullable: false),
-                    CourseID = table.Column<int>(type: "int", nullable: false)
+                    CourseID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -287,14 +293,15 @@ namespace DAL.Migrations
                 name: "Videos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(75)", maxLength: 75, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: true),
                     URL = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: false),
                     order = table.Column<int>(type: "int", nullable: false),
-                    CourseUnitID = table.Column<int>(type: "int", nullable: false),
-                    ExamID = table.Column<int>(type: "int", nullable: true)
+                    CourseUnitID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ExamID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -303,8 +310,7 @@ namespace DAL.Migrations
                         name: "FK_Videos_CourseUnits_CourseUnitID",
                         column: x => x.CourseUnitID,
                         principalTable: "CourseUnits",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Videos_Exams_ExamID",
                         column: x => x.ExamID,
@@ -317,11 +323,12 @@ namespace DAL.Migrations
                 name: "VideoComments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(3000)", maxLength: 3000, nullable: true),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    VideoId = table.Column<int>(type: "int", nullable: false)
+                    VideoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -338,14 +345,15 @@ namespace DAL.Migrations
                 name: "AccountAnswers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExamId = table.Column<int>(type: "int", nullable: false),
-                    AccountId = table.Column<int>(type: "int", nullable: false),
-                    QuestionId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ExamId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AccountId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    QuestionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Answer = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -367,10 +375,11 @@ namespace DAL.Migrations
                 name: "QuestionChoices",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    QuestionID = table.Column<int>(type: "int", nullable: true)
+                    QuestionID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -381,12 +390,13 @@ namespace DAL.Migrations
                 name: "Questions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Mark = table.Column<float>(type: "real", nullable: false),
-                    ExamID = table.Column<int>(type: "int", nullable: false),
-                    CorrectChoiceID = table.Column<int>(type: "int", nullable: false)
+                    ExamID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CorrectChoiceID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -406,28 +416,18 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "1ab4f2da-c0e5-4f57-b8f2-dbf0653e1db0", null, "Admin", "ADMIN" },
-                    { "56d859b7-61fa-460f-b678-91bd8a1f2128", null, "User", "USER" },
-                    { "7ea9d6b0-14d7-4f55-9a57-39bb9adc584c", null, "Instructor", "INSTRUCTOR" }
-                });
-
-            migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "Birthdate", "ConcurrencyStamp", "Country", "EduLevel", "Email", "EmailConfirmed", "Fname", "Gender", "ImageUrl", "Lname", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "admin-user-id", 0, null, new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "e389545a-53ed-4c29-8b12-df9087b8cb20", "USA", "Master's", "admin@example.com", false, "Admin", 0, null, "User", false, null, "ADMIN@EXAMPLE.COM", "ADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEGr0+1+VXjUrMzJ8zodCm8KYOred74XAonzLQoD/VgtTlAVlpePHdxvrciNA2XekXA==", null, false, "57206db3-2ec5-460b-824a-e5b139067046", false, "admin@example.com" });
+                values: new object[] { "admin-user-id", 0, null, new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "626770d0-9e6d-46f1-b371-2f36477c8248", "USA", "Master's", "admin@example.com", false, "Admin", 0, null, "User", false, null, "ADMIN@EXAMPLE.COM", "ADMIN@EXAMPLE.COM", "AQAAAAIAAYagAAAAEN369CP/aIHtE3XhQIxIn2A2NkFWFtKmn20mRW8ZtDqIChzC/FxD/6FAYGz4aLTa1A==", null, false, "f2f58657-8a66-4385-8206-25fabd7280e7", false, "admin@example.com" });
 
             migrationBuilder.InsertData(
                 table: "Courses",
-                columns: new[] { "Id", "CategoryID", "Description", "Details", "Duration", "Intro_Video", "IsFree", "IsPublished", "Last_Update", "Level", "N_Lessons", "Num_Units", "Path", "Price", "Rating", "ThumbnailUrl", "Title" },
+                columns: new[] { "Id", "CategoryID", "DeletedAt", "Description", "Details", "Duration", "Intro_Video", "IsDeleted", "IsFree", "IsPublished", "Last_Update", "Level", "N_Lessons", "Num_Units", "Path", "Price", "Rating", "ThumbnailUrl", "Title" },
                 values: new object[,]
                 {
-                    { 1, null, "Basic mathematics", "That is a course that cover the fundamentals of mathematics", new TimeSpan(2, 2, 0, 0, 0), null, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathx", 0f, 0, "fakeurl", "Math 101" },
-                    { 2, null, "Basic physics", "That is a course that cover the fundamentals of Physics", new TimeSpan(6, 6, 0, 0, 0), null, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathy", 0f, 0, "fakeurl", "Physics 101" },
-                    { 3, null, "Introduction to Computer Science", "That is a course that cover the fundamentals of Computer Science", new TimeSpan(5, 0, 0, 0, 0), null, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathz", 0f, 0, "fakeurl", "Computer Science 101" }
+                    { "1", null, null, "Basic mathematics", "That is a course that cover the fundamentals of mathematics", new TimeSpan(2, 2, 0, 0, 0), null, false, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathx", 0f, 0, "fakeurl", "Math 101" },
+                    { "2", null, null, "Basic physics", "That is a course that cover the fundamentals of Physics", new TimeSpan(6, 6, 0, 0, 0), null, false, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathy", 0f, 0, "fakeurl", "Physics 101" },
+                    { "3", null, null, "Introduction to Computer Science", "That is a course that cover the fundamentals of Computer Science", new TimeSpan(5, 0, 0, 0, 0), null, false, false, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Beginner", 0, 0, "pathz", 0f, 0, "fakeurl", "Computer Science 101" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -533,12 +533,11 @@ namespace DAL.Migrations
                 filter: "[ExamID] IS NOT NULL");
 
             migrationBuilder.AddForeignKey(
-            name: "FK_AccountAnswers_Questions_QuestionId",
-            table: "AccountAnswers",
-            column: "QuestionId",
-            principalTable: "Questions",
-            principalColumn: "Id",
-            onDelete: ReferentialAction.NoAction); // Change from default Cascade to NoAction
+                name: "FK_AccountAnswers_Questions_QuestionId",
+                table: "AccountAnswers",
+                column: "QuestionId",
+                principalTable: "Questions",
+                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_QuestionChoices_Questions_QuestionID",

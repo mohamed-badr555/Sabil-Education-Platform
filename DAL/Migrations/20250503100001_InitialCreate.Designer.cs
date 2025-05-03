@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(E_LearningDB))]
-    [Migration("20250425190650_youssef")]
-    partial class youssef
+    [Migration("20250503100001_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,28 +27,34 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.AccountAnswer", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Answer")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("ExamId")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExamId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -168,7 +174,7 @@ namespace DAL.Migrations
                             Id = "admin-user-id",
                             AccessFailedCount = 0,
                             Birthdate = new DateTime(1985, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "e389545a-53ed-4c29-8b12-df9087b8cb20",
+                            ConcurrencyStamp = "626770d0-9e6d-46f1-b371-2f36477c8248",
                             Country = "USA",
                             EduLevel = "Master's",
                             Email = "admin@example.com",
@@ -179,9 +185,9 @@ namespace DAL.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGr0+1+VXjUrMzJ8zodCm8KYOred74XAonzLQoD/VgtTlAVlpePHdxvrciNA2XekXA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN369CP/aIHtE3XhQIxIn2A2NkFWFtKmn20mRW8ZtDqIChzC/FxD/6FAYGz4aLTa1A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "57206db3-2ec5-460b-824a-e5b139067046",
+                            SecurityStamp = "f2f58657-8a66-4385-8206-25fabd7280e7",
                             TwoFactorEnabled = false,
                             UserName = "admin@example.com"
                         });
@@ -189,11 +195,14 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.Category", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -207,14 +216,14 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.Course", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("CategoryID")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("CategoryID")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -232,6 +241,9 @@ namespace DAL.Migrations
 
                     b.Property<string>("Intro_Video")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsFree")
                         .HasColumnType("bit");
@@ -284,10 +296,11 @@ namespace DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = "1",
                             Description = "Basic mathematics",
                             Details = "That is a course that cover the fundamentals of mathematics",
                             Duration = new TimeSpan(2, 2, 0, 0, 0),
+                            IsDeleted = false,
                             IsFree = false,
                             IsPublished = false,
                             Last_Update = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -302,10 +315,11 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = "2",
                             Description = "Basic physics",
                             Details = "That is a course that cover the fundamentals of Physics",
                             Duration = new TimeSpan(6, 6, 0, 0, 0),
+                            IsDeleted = false,
                             IsFree = false,
                             IsPublished = false,
                             Last_Update = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -320,10 +334,11 @@ namespace DAL.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = "3",
                             Description = "Introduction to Computer Science",
                             Details = "That is a course that cover the fundamentals of Computer Science",
                             Duration = new TimeSpan(5, 0, 0, 0, 0),
+                            IsDeleted = false,
                             IsFree = false,
                             IsPublished = false,
                             Last_Update = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -343,19 +358,25 @@ namespace DAL.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CourseID")
-                        .HasColumnType("int");
+                    b.Property<string>("CourseID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<TimeSpan>("CompTime")
                         .HasColumnType("time");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("FinishedUnits")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastVideo")
@@ -384,19 +405,23 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.CourseUnit", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("CourseID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CourseID")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1500)
                         .HasColumnType("nvarchar(1500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Order")
                         .HasColumnType("int");
@@ -415,14 +440,17 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.Exam", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<float>("FullMark")
                         .HasColumnType("real");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<float>("SuccessGrade")
                         .HasColumnType("real");
@@ -443,17 +471,22 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.Question", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("CorrectChoiceID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CorrectChoiceID")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("ExamID")
-                        .HasColumnType("int");
+                    b.Property<string>("ExamID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<float>("Mark")
                         .HasColumnType("real");
@@ -475,14 +508,17 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.QuestionChoice", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int?>("QuestionID")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("QuestionID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -498,21 +534,24 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.Video", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("CourseUnitID")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CourseUnitID")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1500)
                         .HasColumnType("nvarchar(1500)");
 
-                    b.Property<int?>("ExamID")
-                        .HasColumnType("int");
+                    b.Property<string>("ExamID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -540,11 +579,14 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Data.Models.VideoComment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Text")
                         .HasMaxLength(3000)
@@ -553,8 +595,9 @@ namespace DAL.Migrations
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("VideoId")
-                        .HasColumnType("int");
+                    b.Property<string>("VideoId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -588,26 +631,6 @@ namespace DAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1ab4f2da-c0e5-4f57-b8f2-dbf0653e1db0",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "56d859b7-61fa-460f-b678-91bd8a1f2128",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "7ea9d6b0-14d7-4f55-9a57-39bb9adc584c",
-                            Name = "Instructor",
-                            NormalizedName = "INSTRUCTOR"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -813,9 +836,7 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Data.Models.CourseUnit", "CourseUnit")
                         .WithMany("videos")
-                        .HasForeignKey("CourseUnitID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseUnitID");
 
                     b.HasOne("DAL.Data.Models.Exam", "Exam")
                         .WithOne("Video")

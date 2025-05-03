@@ -9,15 +9,13 @@ namespace DAL
 {
     public interface ISpecification<T>
     {
-        Expression<Func<T, bool>> Criteria { get; set; }
-
-        List<Expression<Func<T, object>>> Includes { get; set; }
-
-        public Expression<Func<T, object>> OrderBy { get; set; }
-        public Expression<Func<T, object>> OrderByDescending { get; set; }
-
-        public int Take { get; set; }
-        public int Skip { get; set; }
-        public bool IsPaginationEnabled { get; set; }
+        Expression<Func<T, bool>> Criteria { get; }
+        List<Expression<Func<T, object>>> Includes { get; }
+        Expression<Func<T, object>> OrderBy { get; }
+        Expression<Func<T, object>> OrderByDescending { get; }
+        int Take { get; }
+        int Skip { get; }
+        bool IsPaginationEnabled { get; }
+        bool IncludeDeleted { get; } // New property
     }
 }

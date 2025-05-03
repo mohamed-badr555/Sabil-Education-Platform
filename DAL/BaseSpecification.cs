@@ -19,6 +19,8 @@ namespace DAL
         public int Skip { get; set; }
         public bool IsPaginationEnabled { get; set; }
 
+        public bool IncludeDeleted  { get; set; }
+
         public BaseSpecification()
         {
 

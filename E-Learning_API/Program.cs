@@ -14,6 +14,7 @@ using StackExchange.Redis;
 using BLL.Managers.BasketManager;
 using E_Learning_API.Middlewares;
 using E_Learning_API.Extensions;
+using BLL.Managers.CategoryManager;
 
 var builder = WebApplication.CreateBuilder(args);
 

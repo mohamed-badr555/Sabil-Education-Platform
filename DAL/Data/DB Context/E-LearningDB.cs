@@ -112,46 +112,46 @@ namespace DAL.DB_Context
                 entity.Property(a => a.URL).IsRequired();
             });
 
-            // Seeding Roles
-            modelBuilder.Entity<IdentityRole>().HasData(
-                new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
-                new IdentityRole { Name = "User", NormalizedName = "USER" },
-                new IdentityRole { Name = "Instructor", NormalizedName = "INSTRUCTOR" }
-            );
+            //// Seeding Roles
+            //modelBuilder.Entity<IdentityRole>().HasData(
+            //    new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
+            //    new IdentityRole { Name = "User", NormalizedName = "USER" },
+            //    new IdentityRole { Name = "Instructor", NormalizedName = "INSTRUCTOR" }
+            //);
 
-            // Seeding Users
-            modelBuilder.Entity<ApplicationUser>().HasData(
-              new ApplicationUser
-              {
-                  Id = "admin-user-id",
-                  UserName = "admin@example.com",
-                  NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                  Email = "admin@example.com",
-                  NormalizedEmail = "ADMIN@EXAMPLE.COM",
-                  Fname = "Admin",
-                  Lname = "User",
-                  EduLevel = "Master's",
-                  Country = "USA",
-                  Birthdate = new DateTime(1985, 6, 15),
-                  Gender = Gender.Male,
-                  PasswordHash = HashPassword(null, "Admin123!") // Manually hashing password
-              }
-          );
+          //  // Seeding Users
+          //  modelBuilder.Entity<ApplicationUser>().HasData(
+          //    new ApplicationUser
+          //    {
+          //        Id = "admin-user-id",
+          //        UserName = "admin@example.com",
+          //        NormalizedUserName = "ADMIN@EXAMPLE.COM",
+          //        Email = "admin@example.com",
+          //        NormalizedEmail = "ADMIN@EXAMPLE.COM",
+          //        Fname = "Admin",
+          //        Lname = "User",
+          //        EduLevel = "Master's",
+          //        Country = "USA",
+          //        Birthdate = new DateTime(1985, 6, 15),
+          //        Gender = Gender.Male,
+          //        PasswordHash = HashPassword(null, "Admin123!") // Manually hashing password
+          //    }
+          //);
 
             // Seeding Courses
-            modelBuilder.Entity<Course>().HasData(
-                    new Course { Id = "1", Title = "Math 101", Description = "Basic mathematics", Duration = TimeSpan.FromHours(50), Details = "That is a course that cover the fundamentals of mathematics", Level = "Beginner", Path = "pathx", ThumbnailUrl = "fakeurl" },
-                    new Course { Id = "2", Title = "Physics 101", Description = "Basic physics", Duration = TimeSpan.FromHours(150), Details = "That is a course that cover the fundamentals of Physics", Level = "Beginner", Path = "pathy", ThumbnailUrl = "fakeurl" },
-                    new Course { Id = "3", Title = "Computer Science 101", Description = "Introduction to Computer Science", Duration = TimeSpan.FromHours(120), Details = "That is a course that cover the fundamentals of Computer Science", Level = "Beginner", Path = "pathz", ThumbnailUrl = "fakeurl" }
-            );
+            //modelBuilder.Entity<Course>().HasData(
+            //        new Course { Id = "1", Title = "Math 101", Description = "Basic mathematics", Duration = TimeSpan.FromHours(50), Details = "That is a course that cover the fundamentals of mathematics", Level = "Beginner", Path = "pathx", ThumbnailUrl = "fakeurl" },
+            //        new Course { Id = "2", Title = "Physics 101", Description = "Basic physics", Duration = TimeSpan.FromHours(150), Details = "That is a course that cover the fundamentals of Physics", Level = "Beginner", Path = "pathy", ThumbnailUrl = "fakeurl" },
+            //        new Course { Id = "3", Title = "Computer Science 101", Description = "Introduction to Computer Science", Duration = TimeSpan.FromHours(120), Details = "That is a course that cover the fundamentals of Computer Science", Level = "Beginner", Path = "pathz", ThumbnailUrl = "fakeurl" }
+            //);
         }
 
-        private static string HashPassword(UserManager<ApplicationUser> userManager, string password)
-        {
-            var hasher = new PasswordHasher<ApplicationUser>();
-            var hashedPassword = hasher.HashPassword(null, password);
-            return hashedPassword;
-        }
+        //private static string HashPassword(UserManager<ApplicationUser> userManager, string password)
+        //{
+        //    var hasher = new PasswordHasher<ApplicationUser>();
+        //    var hashedPassword = hasher.HashPassword(null, password);
+        //    return hashedPassword;
+        //}
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Category> Categories { get; set; }
