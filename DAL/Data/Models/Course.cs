@@ -35,6 +35,18 @@ namespace DAL.Data.Models
         [MaxLength(300)]
         public string ThumbnailUrl { get; set; }    // New !!!
 
+        [Required(ErrorMessage = "Slug is required.")]
+        [MaxLength(100, ErrorMessage = "Slug must not exceed 100 characters.")]
+        [RegularExpression("^[a-zA-Z0-9_-]+$", ErrorMessage = "Slug must be alphanumeric and cannot contain spaces.")]
+        public string Slug { get; set; }
+
+        [MaxLength(200, ErrorMessage = "Tags must not exceed 200 characters.")]
+        public string Tags { get; set; }
+
+        [Required(ErrorMessage = "Course type is required.")]
+        public int CourseType { get; set; }
+
+
 
         #region Category - Course (1-M)
         public string? CategoryID { get; set; } //Foreign key
@@ -47,6 +59,8 @@ namespace DAL.Data.Models
 
         #region Course - Account (M-M)
         public ICollection<CourseAccount> CourseAccounts { get; set; }
+
+
         #endregion
     }
 }
