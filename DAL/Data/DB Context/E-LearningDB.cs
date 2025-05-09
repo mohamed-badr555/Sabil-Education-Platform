@@ -27,21 +27,21 @@ namespace DAL.DB_Context
                 .HasOne(e => e.Video)
                 .WithOne(v => v.Exam)
                 .HasForeignKey<Video>(v => v.ExamID)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading delete
+                .OnDelete(DeleteBehavior.ClientSetNull); 
 
             // One-to-many: Question to QuestionChoices
             modelBuilder.Entity<QuestionChoice>()
                 .HasOne(qc => qc.Question)
                 .WithMany(q => q.QuestionChoices)
                 .HasForeignKey(qc => qc.QuestionID)
-                .OnDelete(DeleteBehavior.Restrict);  // Allow cascading delete from Question to QuestionChoices
+                .OnDelete(DeleteBehavior.Cascade);  // Allow cascading delete from Question to QuestionChoices
 
             // One-to-one: Question to CorrectChoice
             modelBuilder.Entity<Question>()
                 .HasOne(q => q.CorrectChoice)
                 .WithOne()
                 .HasForeignKey<Question>(q => q.CorrectChoiceID)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading delete
+                .OnDelete(DeleteBehavior.ClientSetNull);  // Prevent cascading delete
 
             modelBuilder.Entity<AccountAnswer>()
             .HasOne(a => a.Question)
@@ -58,13 +58,13 @@ namespace DAL.DB_Context
                 .HasOne(e => e.User)
                 .WithMany(a => a.CourseAccounts)
                 .HasForeignKey(e => e.UserId)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading delete
+                .OnDelete(DeleteBehavior.Cascade);  // Prevent cascading delete
 
             modelBuilder.Entity<CourseAccount>()
                 .HasOne(e => e.course)
                 .WithMany(c => c.CourseAccounts)
                 .HasForeignKey(e => e.CourseID)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading delete
+                .OnDelete(DeleteBehavior.Cascade);  // Prevent cascading delete
 
             // Configure the Category entity
             modelBuilder.Entity<Category>()
@@ -139,11 +139,11 @@ namespace DAL.DB_Context
           //);
 
             // Seeding Courses
-            //modelBuilder.Entity<Course>().HasData(
-            //        new Course { Id = "1", Title = "Math 101", Description = "Basic mathematics", Duration = TimeSpan.FromHours(50), Details = "That is a course that cover the fundamentals of mathematics", Level = "Beginner", Path = "pathx", ThumbnailUrl = "fakeurl" },
-            //        new Course { Id = "2", Title = "Physics 101", Description = "Basic physics", Duration = TimeSpan.FromHours(150), Details = "That is a course that cover the fundamentals of Physics", Level = "Beginner", Path = "pathy", ThumbnailUrl = "fakeurl" },
-            //        new Course { Id = "3", Title = "Computer Science 101", Description = "Introduction to Computer Science", Duration = TimeSpan.FromHours(120), Details = "That is a course that cover the fundamentals of Computer Science", Level = "Beginner", Path = "pathz", ThumbnailUrl = "fakeurl" }
-            //);
+            modelBuilder.Entity<Course>().HasData(
+                    new Course { Id = "1", Title = "Math 101", Description = "Basic mathematics", Duration = TimeSpan.FromHours(50), Details = "That is a course that cover the fundamentals of mathematics", Level = "Beginner", Path = "pathx", ThumbnailUrl = "fakeurl" },
+                    new Course { Id = "2", Title = "Physics 101", Description = "Basic physics", Duration = TimeSpan.FromHours(150), Details = "That is a course that cover the fundamentals of Physics", Level = "Beginner", Path = "pathy", ThumbnailUrl = "fakeurl" },
+                    new Course { Id = "3", Title = "Computer Science 101", Description = "Introduction to Computer Science", Duration = TimeSpan.FromHours(120), Details = "That is a course that cover the fundamentals of Computer Science", Level = "Beginner", Path = "pathz", ThumbnailUrl = "fakeurl" }
+            );
         }
 
         //private static string HashPassword(UserManager<ApplicationUser> userManager, string password)

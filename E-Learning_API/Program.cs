@@ -9,6 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using BLL.Managers.CourseManager;
+using System.Text.Json.Serialization;
+using DAL.Repositories.VideoRepo;
+using DAL.Repositories.CourseRepo;
+using E_Learning_API.Middlewares;
 
 using StackExchange.Redis;
 using BLL.Managers.BasketManager;
@@ -22,6 +26,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IVideoRepo, VideoRepo>();
+builder.Services.AddScoped<ICourseRepo, CourseRepo>();
+
+
+
 
 // Add application services including error handling
 builder.Services.AddApplicationServices();
@@ -37,6 +46,12 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 builder.Services.AddScoped(typeof(IBasketRepository),typeof(BasketRepository));
 builder.Services.AddScoped<IBasketManager, BasketManager>();
 builder.Services.AddScoped<ICourseManager, CourseManager>();
+builder.Services.AddScoped<ICourseManager,CourseManager>();
+
+
+
+builder.Services.AddMemoryCache();
+
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -63,8 +78,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

@@ -32,5 +32,5 @@ namespace BLL.DTOs
         public string ThumbnailUrl { get; set; }
     }
 
- 
+
 }

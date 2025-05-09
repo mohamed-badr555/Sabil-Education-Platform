@@ -26,5 +26,11 @@ namespace E_Learning_API.Controllers
         {
             return StatusCode(500, new ApiResponseFormat<T>(500, message ?? "Internal Server Error", default));
         }
+
+        protected ActionResult<ApiResponseFormat<T>> NoContentResponse<T>(string message = null)
+        {
+       
+          return StatusCode(204, new ApiResponseFormat<T>(204, message ?? "No Content", default));
+        }
     }
 }

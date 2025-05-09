@@ -31,7 +31,7 @@ namespace DAL.Data.Models
         #region Question - QuestionChoices (1-1)
         //1-1
 
-        public string CorrectChoiceID { get; set; }
+        public string? CorrectChoiceID { get; set; }
 
 
         public QuestionChoice CorrectChoice { get; set; }

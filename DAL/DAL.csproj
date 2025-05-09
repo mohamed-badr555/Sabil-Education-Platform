@@ -15,8 +15,12 @@
   <ItemGroup>
     <Compile Include="Repositories\BasketRepo\BasketRepository.cs" />
     <Compile Include="Repositories\BasketRepo\IBasketRepository.cs" />
+    <Compile Include="Repositories\CourseRepo\CourseRepo.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
+    <Compile Include="Repositories\CourseRepo\ICourseRepo.cs" />
     <Compile Include="Repositories\IGenericRepository.cs" />
+    <Compile Include="Repositories\VideoRepo\IVideoRepo.cs" />
+    <Compile Include="Repositories\VideoRepo\VideoRepo.cs" />
   </ItemGroup>
 
   <ItemGroup>

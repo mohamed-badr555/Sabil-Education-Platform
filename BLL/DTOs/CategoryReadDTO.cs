@@ -8,7 +8,7 @@ namespace BLL.DTOs
 {
     public class CategoryReadDTO
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string name { get; set; }
     }
 }
