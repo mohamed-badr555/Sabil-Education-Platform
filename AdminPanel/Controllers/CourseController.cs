@@ -9,13 +9,13 @@ using System.Text.RegularExpressions;
 
 namespace AdminPanel.Controllers
 {
-    public class CoursesController : Controller
+    public class CourseController : Controller
     {
         private readonly ICourseManager _courseManager;
         private readonly ICategoryManager _categoryManager;
-        private readonly ILogger<CoursesController> _logger;
+        private readonly ILogger<CourseController> _logger;
 
-        public CoursesController(ICourseManager courseManager, ICategoryManager categoryManager, ILogger<CoursesController> logger)
+        public CourseController(ICourseManager courseManager, ICategoryManager categoryManager, ILogger<CourseController> logger)
         {
             _courseManager = courseManager;
             _categoryManager = categoryManager;

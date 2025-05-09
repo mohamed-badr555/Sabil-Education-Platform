@@ -3,7 +3,7 @@
 
 
 @{
-    ViewData["Title"] = "Courses";
+    ViewData["Title"] = "Course";
 }
 
 <section dir="" class="p-2 border-end border-top border-4 border-primary">
@@ -82,7 +82,7 @@
                     <h1 class="modal-title fs-5 text-center" id="addCourseLabel">Add Course</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="addCourseForm" asp-controller="Courses" asp-action="Add" method="post" enctype="multipart/form-data">
+                <form  asp-controller="Course" asp-action="Add" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="row g-2">
                             <div class="col-12"> 
