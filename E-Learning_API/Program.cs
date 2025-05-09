@@ -46,7 +46,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 builder.Services.AddScoped(typeof(IBasketRepository),typeof(BasketRepository));
 builder.Services.AddScoped<IBasketManager, BasketManager>();
 builder.Services.AddScoped<ICourseManager, CourseManager>();
-builder.Services.AddScoped<ICourseManager,CourseManager>();
+//builder.Services.AddScoped<ICourseManager,CourseManager>();
 
 
 

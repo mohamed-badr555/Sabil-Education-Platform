@@ -20,12 +20,12 @@ namespace BLL.Managers.CourseManager
         Task DeleteAsync(string id);
         Task<VideoDetailsDTO> GetVideoAsync(string coursePath,int unitOrderIndex, int videoOrderIndex);
         Task<CourseContentDTO> GetCourseContentAsync(string coursePath, string userId = null);
-        Task<CourseDetailsDTO> GetByIdAsync(string id);
+        //Task<CourseDetailsDTO> GetByIdAsync(string id);
         //Task<List<CourseListDTO>> SearchCoursesAsync(string searchTerm);
         //Task<List<CourseListDTO>> FilterCoursesAsync(string level, string category);
-        Task<CourseAddDTO> AddAsync(CourseAddDTO courseDto);
-        Task UpdateAsync(CourseAddDTO courseDto);
-        Task DeleteAsync(string id);
+        //Task<CourseAddDTO> AddAsync(CourseAddDTO courseDto);
+        //Task UpdateAsync(CourseAddDTO courseDto);
+        //Task DeleteAsync(string id);
         //Task<bool> ExistsAsync(string id);
         //Task<bool> ExistsByTitleAsync(string title);
         //Task<int> GetCoursesCountAsync();

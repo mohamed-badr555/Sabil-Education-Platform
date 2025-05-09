@@ -52,6 +52,11 @@ namespace BLL.MappingProfiles
             CreateMap<Category, CategoryDTO>();
             CreateMap<CategoryDTO, Category>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id)));
+
+
+            CreateMap<Course, CourseContentDTO>()
+            .ForMember(dest => dest.StudentsCount, opt => opt.MapFrom(src => src.CourseAccounts.Count))
+            .ForMember(dest => dest.Units, opt => opt.MapFrom(src => src.CourseUnits));
         }
 
         // Helper methods to convert between string and int for CourseType

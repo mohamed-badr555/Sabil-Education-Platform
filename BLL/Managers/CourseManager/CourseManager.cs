@@ -26,7 +26,7 @@ namespace BLL.Managers.CourseManager
         private readonly IMemoryCache memoryCache;
         private readonly ILogger<CourseManager> _logger;
 
-        public CourseManager(ICourseRepo courseRepo, IGenericRepository<Category> categoryRepo, IVideoRepo _videoRepo, IMapper mapper , IMemoryCache memoryCache)
+        public CourseManager(ICourseRepo courseRepo, ILogger<CourseManager> logger, IGenericRepository<Category> categoryRepo, IVideoRepo _videoRepo, IMapper mapper , IMemoryCache memoryCache)
         {
             _courseRepo = courseRepo;   
             this.categoryRepo = categoryRepo;
@@ -118,7 +118,7 @@ namespace BLL.Managers.CourseManager
             return CourseDto;
         }
 
-        public async Task<CourseAddDTO> AddAsync(CourseAddDTO courseDto)
+        public async Task AddAsync(CourseAddDTO courseDto)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace BLL.Managers.CourseManager
                 await _courseRepo.InsertAsync(course);
 
                 // Map back to DTO and return
-                return mapper.Map<CourseAddDTO>(course);
+                //return mapper.Map<CourseAddDTO>(course);
             }
             catch (Exception ex)
             {
@@ -165,8 +165,8 @@ namespace BLL.Managers.CourseManager
 
 
 
-        public async Task UpdateAsync(CourseAddDTO CourseDTO)
-        {
+        //public async Task UpdateAsync(CourseAddDTO CourseDTO)
+        //{
 
         //    courseDTOs = courseDTOs.Where(c =>
         //        (string.IsNullOrWhiteSpace(level) || c.Level.ToLower().Contains(level)) &&

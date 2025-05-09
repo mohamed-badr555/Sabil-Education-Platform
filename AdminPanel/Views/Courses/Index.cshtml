@@ -50,14 +50,11 @@
                         </h4>
                         <p class="badge text-bg-secondary">@course.CategoryName</p>
                         <div dir="" class="input-group mb-3 w-50 mx-auto">
-                            @* <span dir="" class="input-group-text rounded-start-0 rounded-end-2">00.</span> *@
+                       
                             <input type="text" class="form-control form text-center" disabled value="@course.Price" aria-label="Price">
                             <span dir="" class="input-group-text rounded-start-2 rounded-end-0">EGP</span>
                         </div>
-                        @* <div class="text-muted d-flex justify-content-between"> *@
-                        @*     <span>Lessons: @course.N_Lessons</span> *@
-                        @*     <span>Level: @course.Level</span> *@
-                        @* </div> *@
+                  
 
                         <div class="d-flex mt-2 w-100">
                             <button type="button" class="btn btn-outline-warning flex-grow-1 mx-2 edit-course" data-id="@course.Id">
@@ -85,20 +82,20 @@
                     <h1 class="modal-title fs-5 text-center" id="addCourseLabel">Add Course</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="addCourseForm" asp-action="Add" method="post" enctype="multipart/form-data">
+                <form id="addCourseForm" asp-controller="Courses" asp-action="Add" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="row g-2">
-                            <div class="col-12">
-                                <div class="img">
-                                    <label for="thumbnailFile" class="labelFile">
+                            <div class="col-12"> 
+                                 <div class="img"> 
+                                    <label for="thumbnailFile" class="labelFile"> 
                                         <span>
                                             <i class="fa-solid fa-upload fa-2x"></i>
                                         </span>
-                                        <p>Drag and drop your file here or click to select a file!</p>
+                                         <p>Drag and drop your file here or click to select a file!</p>
                                     </label>
-                                    <input class="input" type="file" id="thumbnailFile" name="thumbnailFile" accept="image/*" />
-                                </div>
-                            </div>
+                                   <input class="input" type="file" id="thumbnailFile" name="thumbnailFile" accept="image/*" />
+                              </div> 
+                             </div> 
 
 
                             <div class="col-md-6">
