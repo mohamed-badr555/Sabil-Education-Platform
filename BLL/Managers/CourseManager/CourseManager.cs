@@ -42,6 +42,8 @@ namespace BLL.Managers.CourseManager
 
             var Data = mapper.Map<IEnumerable<Course>, IEnumerable<CourseListDTO>>(courses);
 
+
+
             var countSpec = new CourseWithFiltersForCountSpecification(courseparams);
 
             var Count = await _courseRepo.GetCountAsync(countSpec);
@@ -52,7 +54,7 @@ namespace BLL.Managers.CourseManager
         public async Task<IEnumerable<CategoryReadDTO>> GetAllCategoriesAsync()
         {
             var Categories = await categoryRepo.GetAllAsync();
-            var CategoriesDtos = mapper.Map<IEnumerable<CategoryReadDTO>>(Categories); // Auto-map
+            var CategoriesDtos = mapper.Map<IEnumerable<CategoryReadDTO>>(Categories); 
 
             return CategoriesDtos;
 
@@ -68,7 +70,7 @@ namespace BLL.Managers.CourseManager
                 return cachedResult;
             }
 
-            // Cache miss - proceed with normal operation
+           
             var spec = new PopularCourseSpecification();
             var courses = await _courseRepo.GetAllWithSpecAsync(spec);
             var data = mapper.Map<IEnumerable<Course>, IEnumerable<CourseListDTO>>(courses);

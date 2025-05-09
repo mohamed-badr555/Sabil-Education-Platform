@@ -18,7 +18,7 @@ namespace BLL.Specifications.Courses
                     c.Level == courseParams.Level)
             )
         {
-            // No includes, sorting, or pagination here — just filtering.
+            // No includes, sorting, or pagination here — just filtering
         }
     }
 }
