@@ -10,7 +10,7 @@ namespace BLL.DTOs
 
     public class CourseDetailsDTO
     {
-        //public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -24,7 +24,7 @@ namespace BLL.DTOs
         public string Intro_Video { get; set; } // Embedded video URL
 
         // Key Stats
-        public int N_Lessons { get; set; } // e.g.,  11 lesson
+        //public int N_Lessons { get; set; } // e.g.,  11 lesson
         public TimeSpan Duration { get; set; } // e.g., 8h 30m
         public DateTime Last_Update { get; set; } // e.g., "تم التحديث: ٢٠٢٣-١٠-١٥"
         public string CategoryName { get; set; }
@@ -39,22 +39,10 @@ namespace BLL.DTOs
         public string Path { get; set; }
         public string ThumbnailUrl { get; set; }
 
-
-        // Progress Tracking (if user is enrolled)
-        //public bool IsEnrolled { get; set; }
-        //public decimal CompletionPercentage { get; set; }
-
-        // Call-to-Action
+    
         public float Price { get; set; }
         public bool IsFree { get; set; }
-        //public string EnrollmentUrl { get; set; } // e.g., "/enroll/123"
-
-        // Navigation Links
-        //public Dictionary<string, string> Links { get; set; } = new()
-        //{
-        //    ["self"] = "", // Will be "/api/courses/123"
-        //    ["lessons"] = "" // Will be "/api/courses/123/lessons"
-
-        //};
+        public string CourseType { get; set; }
+        public string Tags { get; set; }
     }
 }

@@ -153,6 +153,25 @@ namespace DAL.DB_Context
         //    return hashedPassword;
         //}
 
+        //public override int SaveChanges()
+        //{
+        //    var entries = ChangeTracker.Entries()
+        //        .Where(e => e.Entity is BaseEntity && (e.State == EntityState.Deleted ));
+        //    foreach (var entry in entries)
+        //    {
+        //        if(entry.State == EntityState.Deleted)
+        //        {
+        //            entry.State = EntityState.Modified;
+        //            ((BaseEntity)entry.Entity).IsDeleted = true;
+        //            ((BaseEntity)entry.Entity).DeletedAt = DateTime.UtcNow;
+        //        }
+
+        //    }
+
+
+
+        //        return base.SaveChanges();
+        //}
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Course> Courses { get; set; }

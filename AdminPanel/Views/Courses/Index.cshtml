@@ -1,290 +1,232 @@
-﻿
+﻿@model AdminPanel.Models.CourseViewModel
+
+
 
 @{
     ViewData["Title"] = "Courses";
-  
 }
-@model Course
+
 <section dir="" class="p-2 border-end border-top border-4 border-primary">
     <div class="d-flex justify-content-between align-items-center">
-
-        <div> Number Of Courses:</div>
+        <div>Number Of Courses: @Model.TotalCount</div>
         <div>
-
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCourse">
                 <i class="fa-solid fa-plus"></i>
                 Add Course
             </button>
-
-
-
         </div>
-
     </div>
-    <hr class="link-primary " style="height: 5px; width: 100%;">
-    <div class="row ">
-        <div class="col-md-3">
-            <div class="card m-3">
-                <img src="images/Learning-cuate.png" class="card-img-top" alt="...">
-                <div class="card-body">
 
-                    <h4>
-                        <a asp-action="Index" class=" card-title fw-bolder" asp-controller="Units" asp-route-courseId="5">
+    <hr class="link-primary" style="height: 5px; width: 100%;">
 
-                            دورة ابنى ابنك
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-                        </a>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-                    </h4>
-                    <p class="badge text-bg-secondary">دورة لأكتشاف مهارة الابناء</p>
-                    <div dir="" class="input-group mb-3 w-50 mx-auto">
-                        <span dir="" class="input-group-text rounded-start-0 rounded-end-2">00.</span>
-                        <input type="text" class="form-control form text-center" disabled value="100" aria-label="Amount (to the nearest Pound)">
-                        <span dir="" class="input-group-text rounded-start-2 rounded-end-0">EGP</span>
-                    </div>
-                    <div class="text-muted d-flex justify-content-between">
-                        <span>  عدد الطلاب : 26</span>
-                        <span>المستوى : مبتدئ </span>
-                    </div>
-            
-                    <div class="d-flex mt-2 w-100">
-              
-                        <button type="button" class="btn btn-outline-warning flex-grow-1 mx-2" data-bs-toggle="modal" data-bs-target="#EditCourse">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                            تعديل
-                        </button>
-                        <button type="button" class="btn btn-danger mx-2">
-                            <i class="fa-solid fa-trash" style="color: #ffffff;"></i>
+    <div class="row">
+        @foreach (var course in Model.Courses)
+        {
+            <div class="col-md-3">
+                <div class="card m-3">
+                    <img src="@(string.IsNullOrEmpty(course.ThumbnailUrl) ? "/images/Learning-cuate.png" : $"/Files/courses/{course.ThumbnailUrl}")"
+                         class="card-img-top" alt="@course.Title" style="height: 150px; object-fit: cover;">
+                    <div class="card-body">
+                        <h4>
+                            <a asp-action="Index" class="card-title fw-bolder" asp-controller="Units" asp-route-courseId="@course.Id">
+                                @course.Title
+                            </a>
+                        </h4>
+                        <p class="badge text-bg-secondary">@course.CategoryName</p>
+                        <div dir="" class="input-group mb-3 w-50 mx-auto">
+                            @* <span dir="" class="input-group-text rounded-start-0 rounded-end-2">00.</span> *@
+                            <input type="text" class="form-control form text-center" disabled value="@course.Price" aria-label="Price">
+                            <span dir="" class="input-group-text rounded-start-2 rounded-end-0">EGP</span>
+                        </div>
+                        <div class="text-muted d-flex justify-content-between">
+                            <span>Lessons: @course.N_Lessons</span>
+                            <span>Level: @course.Level</span>
+                        </div>
 
-                        </button>
+                        <div class="d-flex mt-2 w-100">
+                            <button type="button" class="btn btn-outline-warning flex-grow-1 mx-2 edit-course" data-id="@course.Id">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                Edit
+                            </button>
+                            <form asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to delete this course?');">
+                                <input type="hidden" name="id" value="@course.Id" />
+                                <button type="submit" class="btn btn-danger mx-2">
+                                    <i class="fa-solid fa-trash" style="color: #ffffff;"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
+        }
     </div>
 
+    <!-- Add Course Modal -->
     <div class="modal fade" id="addCourse" tabindex="-1" aria-labelledby="addCourseLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content ">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5 text-center" id="addCourseLabel">Add Course</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-
-                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
-
+                <form id="addCourseForm" asp-action="Add" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
                         <div class="row g-2">
-
                             <div class="col-12">
                                 <div class="img">
-                                    <label for="file" class="labelFile">
+                                    <label for="thumbnailFile" class="labelFile">
                                         <span>
-                                            <svg xml:space="preserve" viewBox="0 0 184.69 184.69"
-                                                 xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" id="Capa_1" version="1.1"
-                                                 width="60px" height="60px">
-                                            <g>
-                                            <g>
-                                            <g>
-                                            <path d="..." style="fill:#010002;"></path>
-                                      </g>
-                                            <g>
-                                            <path d="..." style="fill:#010002;"></path>
-                                      </g>
-                                    </g>
-                                  </g>
-                                </svg>
+                                            <i class="fa-solid fa-upload fa-2x"></i>
                                         </span>
-                                        <p>drag and drop your file here or click to select a file!</p>
+                                        <p>Drag and drop your file here or click to select a file!</p>
                                     </label>
-                                    <input class="input" type="file" asp-for="ThumbnailUrl" />
-                                    <span asp-validation-for="ThumbnailUrl" class="text-danger"></span>
+                                    <input class="input" type="file" id="thumbnailFile" name="thumbnailFile" accept="image/*" />
                                 </div>
                             </div>
+
+
                             <div class="col-md-6">
-                                <label class="form-label" asp-for="Title">عنوان الدوره</label>
-                                <input type="text" class="form-control" asp-for="Title">
-                                <span asp-validation-for="Title" class="text-danger"></span>
+                                <label class="form-label" for="Title">Course Title</label>
+                                <input type="text" class="form-control" name="Title" required>
                             </div>
+
                             <div class="col-md-6">
-                                <label class="form-label" asp-for="CategoryID">تصنيف الدوره</label>
-                                <select class="form-select" asp-for="CategoryID">
-                                    <option selected>chose one</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                <label class="form-label" for="CategoryId">Course Category</label>
+                                <select class="form-select" name="CategoryId">
+                                    <option selected>-- Select Category --</option>
+                                    @foreach (var category in Model.Categories)
+                                    {
+                                        <option value="@category.Value">@category.Text</option>
+                                    }
                                 </select>
-                                <span asp-validation-for="CategoryID" class="text-danger"></span>
                             </div>
+
                             <div class="col-md-6">
-                                <label class="form-label" asp-for="Price">السعر </label>
+                                <label class="form-label" for="Price">Price</label>
                                 <div class="input-group mb-3 mx-auto">
                                     <span class="input-group-text rounded-start-0 rounded-end-2">00.</span>
-                                    <input type="text" class="form-control text-center" asp-for="Price">
+                                    <input type="number" step="0.01" class="form-control text-center" name="Price" value="0">
                                     <span class="input-group-text rounded-start-2 rounded-end-0">EGP</span>
                                 </div>
-                                <span asp-validation-for="Price" class="text-danger"></span>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label" asp-for="Slug">عنوان الدوره بالانجليزى بدون فواصل</label>
-                                <input type="text" class="form-control" asp-for="Slug">
-                                <span asp-validation-for="Slug" class="text-danger"></span>
+
+                          <div class="col-md-6"> 
+                          <label class="form-label" asp-for="Path" ></label>
+                                <input  class="form-control" asp-for="Path">
                             </div>
+
                             <div class="col-md-6">
-                                <label class="form-label" asp-for="Tags">العلامات مفصوله بفواصل </label>
-                                <input type="text" class="form-control" asp-for="Tags">
-                                <span asp-validation-for="Tags" class="text-danger"></span>
+                                <label class="form-label" for="Tags">Tags (comma separated)</label>
+                                <input type="text" class="form-control" name="Tags">
                             </div>
+
                             <div class="col-md-6">
-                                <label class="form-label" asp-for="Intro_Video">فيديو تعريفى</label>
-                                <input type="text" class="form-control" asp-for="Intro_Video">
-                                <span asp-validation-for="Intro_Video" class="text-danger"></span>
+                                <label class="form-label" for="Intro_Video">Intro Video</label>
+                                <input type="text" class="form-control" name="Intro_Video">
                             </div>
+
                             <div class="col-md-6">
-                                <label class="form-label" asp-for="CourseType">نوع الدوره </label>
-                                <select class="form-select" asp-for="CourseType">
-                                    <option selected>chose one</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                <label class="form-label" for="CourseType">Course Type</label>
+                                <select class="form-select" name="CourseType">
+                                    <option value="">-- Select Type --</option>
+                                    <option value="Online">Online</option>
+                                    <option value="Recorded">Recorded</option>
+                                    <option value="Live">Live</option>
                                 </select>
-                                <span asp-validation-for="CourseType" class="text-danger"></span>
                             </div>
+
                             <div class="col-md-6">
-                                <label class="form-label" asp-for="Level">مستوى الجمهور</label>
-                                <select class="form-select" asp-for="Level">
-                                    <option selected>chose one</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                <label class="form-label" for="Level">Audience Level</label>
+                                <select class="form-select" name="Level">
+                                    <option value="">-- Select Level --</option>
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advanced">Advanced</option>
+                                    <option value="All">All Levels</option>
                                 </select>
-                                <span asp-validation-for="Level" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label" for="Description">Course Description</label>
+                                <textarea class="form-control" name="Description" rows="3"></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label" for="Details">Course Details</label>
+                                <textarea class="form-control" name="Details" rows="4"></textarea>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add Course</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Course</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-
-
-
-
-
-    <div class="modal fade" id="EditCourse" tabindex="-1" aria-labelledby="EditCourseLabel" aria-hidden="true">
+    <!-- Edit Course Modal (will be populated via AJAX) -->
+    <div class="modal fade" id="editCourse" tabindex="-1" aria-labelledby="editCourseLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content ">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <h1 class="modal-title fs-5 text-center" id="EditCourseLabel">Add Course</h1>
-                </div>
-                <div class="modal-body">
-
-                    <form asp-action="EditCourse" method="post" enctype="multipart/form-data">
-
-                        <div class="row g-2">
-
-                            <div class="col-12">
-                                <div class="img">
-                                    <label for="file" class="labelFile">
-                                        <span>
-                                            <svg xml:space="preserve" viewBox="0 0 184.69 184.69"
-                                                 xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" id="Capa_1" version="1.1"
-                                                 width="60px" height="60px">
-                                            <g>
-                                            <g>
-                                            <g>
-                                            <path d="..." style="fill:#010002;"></path>
-                                      </g>
-                                            <g>
-                                            <path d="..." style="fill:#010002;"></path>
-                                      </g>
-                                    </g>
-                                  </g>
-                                </svg>
-                                        </span>
-                                        <p>drag and drop your file here or click to select a file!</p>
-                                    </label>
-                                    <input class="input" type="file" asp-for="ThumbnailUrl" />
-                                    <span asp-validation-for="ThumbnailUrl" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" asp-for="Title">عنوان الدوره</label>
-                                <input type="text" class="form-control" asp-for="Title">
-                                <span asp-validation-for="Title" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" asp-for="CategoryID">تصنيف الدوره</label>
-                                <select class="form-select" asp-for="CategoryID">
-                                    <option selected>chose one</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                                <span asp-validation-for="CategoryID" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" asp-for="Price">السعر </label>
-                                <div class="input-group mb-3 mx-auto">
-                                    <span class="input-group-text rounded-start-0 rounded-end-2">00.</span>
-                                    <input type="text" class="form-control text-center" asp-for="Price">
-                                    <span class="input-group-text rounded-start-2 rounded-end-0">EGP</span>
-                                </div>
-                                <span asp-validation-for="Price" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" asp-for="Slug">عنوان الدوره بالانجليزى بدون فواصل</label>
-                                <input type="text" class="form-control" asp-for="Slug">
-                                <span asp-validation-for="Slug" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" asp-for="Tags">العلامات مفصوله بفواصل </label>
-                                <input type="text" class="form-control" asp-for="Tags">
-                                <span asp-validation-for="Tags" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" asp-for="Intro_Video">فيديو تعريفى</label>
-                                <input type="text" class="form-control" asp-for="Intro_Video">
-                                <span asp-validation-for="Intro_Video" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" asp-for="CourseType">نوع الدوره </label>
-                                <select class="form-select" asp-for="CourseType">
-                                    <option selected>chose one</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                                <span asp-validation-for="CourseType" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" asp-for="Level">مستوى الجمهور</label>
-                                <select class="form-select" asp-for="Level">
-                                    <option selected>chose one</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                                <span asp-validation-for="Level" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add Course</button>
-                </div>
+            <div class="modal-content" id="editCourseContent">
+                <!-- Content will be loaded here -->
             </div>
         </div>
     </div>
-
 </section>
 
+@section Scripts {
+    <script>
+        $(function() {
+            $('.edit-course').click(function() {
+                var courseId = $(this).data('id');
+                $('#editCourseContent').load('@Url.Action("Edit", "Courses")/' + courseId, function() {
+                    $('#editCourse').modal('show');
+                });
+            });
+
+            // Preview image when selected in add modal
+            $('#thumbnailFile').change(function() {
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var preview = $('<img>').attr('src', e.target.result)
+                            .css({'max-width': '100%', 'max-height': '150px', 'margin-bottom': '10px'});
+                        $('.img').prepend(preview);
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            // Generate Path/Slug from Title
+            $('input[name="Title"]').blur(function() {
+                var path = $('input[name="Path"]');
+                if (!path.val()) {
+                    path.val($(this).val()
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/-+/g, '-')
+                        .replace(/^-|-$/g, ''));
+                }
+            });
+        });
+    </script>
+}
 

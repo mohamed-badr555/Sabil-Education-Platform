@@ -112,7 +112,7 @@ namespace DAL.Repositories
         {
             entity.IsDeleted = true;
             entity.DeletedAt = DateTime.UtcNow;
-            _dbContext.Entry(entity).State = EntityState.Modified;
+            //_dbContext.Entry(entity).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }
 

@@ -10,17 +10,18 @@ namespace DAL.Data.Models
     public class Course :BaseEntity
     {
        
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Title { get; set; }
         [MaxLength(50)]
+        [Required(ErrorMessage = "Level is required.")]
         public string Level { get; set; }   // Consider converting it to enum
-        public int N_Lessons { get; set; }
+        //public int N_Lessons { get; set; }
         [MaxLength(500)]
-        public string Path { get; set; }   // Path of the course videos directory
+        public string? Path { get; set; }   // Path of the course videos directory
         public float Price { get; set; }
-        public bool IsFree { get; set; }
+        public bool IsFree { get; set; } = false;
         [Range(1, 5)]
-        public int Rating { get; set; }
+        public int Rating { get; set; } = 0;
         [MaxLength(2000)]
         public string Description { get; set; }
         [MaxLength(1500)]
@@ -28,17 +29,14 @@ namespace DAL.Data.Models
         [MaxLength(50)]
         public TimeSpan Duration { get; set; }
         public DateTime Last_Update { get; set; }
-        public bool IsPublished { get; set; }
+        //public bool IsPublished { get; set; }
         public string? Intro_Video { get; set; }   //  
-        [MaxLength(300)]
-        public int Num_Units { get; set; }
+        //[MaxLength(300)]
+        //public int Num_Units { get; set; }
         [MaxLength(300)]
         public string ThumbnailUrl { get; set; }    // New !!!
 
-        [Required(ErrorMessage = "Slug is required.")]
-        [MaxLength(100, ErrorMessage = "Slug must not exceed 100 characters.")]
-        [RegularExpression("^[a-zA-Z0-9_-]+$", ErrorMessage = "Slug must be alphanumeric and cannot contain spaces.")]
-        public string Slug { get; set; }
+   
 
         [MaxLength(200, ErrorMessage = "Tags must not exceed 200 characters.")]
         public string Tags { get; set; }
@@ -49,6 +47,7 @@ namespace DAL.Data.Models
 
 
         #region Category - Course (1-M)
+        [Required(ErrorMessage = "Category is required.")]
         public string? CategoryID { get; set; } //Foreign key
         public Category Category { get; set; }
         #endregion

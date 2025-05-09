@@ -22,6 +22,8 @@ namespace E_Learning_API.Middlewares
             try
             {
                 await _next(context);
+
+
             }
             catch (Exception ex)
             {

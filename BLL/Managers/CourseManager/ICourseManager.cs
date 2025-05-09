@@ -14,10 +14,13 @@ namespace BLL.Managers.CourseManager
         Task<IEnumerable<CategoryReadDTO>> GetAllCategoriesAsync();
         Task<Pagination<CourseListDTO>> GetPopularAsync();
         Task<CourseDetailsDTO> GetByIdAsync(string id);
-        Task<List<CourseListDTO>> SearchCoursesAsync(string SearchItem);
-        Task<List<CourseListDTO>> FilterCoursesAsync(string level, string category);
-        Task AddAsync(CourseAddDTO Course);
-        Task UpdateAsync(CourseAddDTO Course);
+        //Task<List<CourseListDTO>> SearchCoursesAsync(string searchTerm);
+        //Task<List<CourseListDTO>> FilterCoursesAsync(string level, string category);
+        Task<CourseAddDTO> AddAsync(CourseAddDTO courseDto);
+        Task UpdateAsync(CourseAddDTO courseDto);
         Task DeleteAsync(string id);
+        //Task<bool> ExistsAsync(string id);
+        //Task<bool> ExistsByTitleAsync(string title);
+        //Task<int> GetCoursesCountAsync();
     }
 }

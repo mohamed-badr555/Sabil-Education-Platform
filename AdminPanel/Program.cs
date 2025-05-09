@@ -1,4 +1,5 @@
 using BLL.Managers.CategoryManager;
+using BLL.Managers.CourseManager;
 using DAL.Data.Models;
 using DAL.DB_Context;
 using DAL.Repositories;
@@ -13,8 +14,10 @@ namespace AdminPanel
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            // Add services to the container. 
+            //.AddRazorRuntimeCompilation()
+            builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<E_LearningDB>(option =>
             {
@@ -29,6 +32,7 @@ namespace AdminPanel
 
             // Register your manager services
             builder.Services.AddScoped<ICategoryManager, CategoryManager>();
+            builder.Services.AddScoped<ICourseManager, CourseManager>();
 
             // Register AutoMapper if you're using it (assuming you have a MappingProfile class)
             builder.Services.AddAutoMapper(typeof(BLL.MappingProfiles.MappingProfile).Assembly);

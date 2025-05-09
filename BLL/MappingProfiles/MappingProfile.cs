@@ -16,25 +16,65 @@ namespace BLL.MappingProfiles
     {
         public MappingProfile()
         {
-            CreateMap<Course, CourseDetailsDTO>().ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
-            CreateMap<CourseDetailsDTO, Course>();
+            // Fix the mapping for Course to CourseDetailsDTO
+            CreateMap<Course, CourseDetailsDTO>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null))
+                .ForMember(dest => dest.CourseType, opt => opt.MapFrom(src => GetCourseTypeString(src.CourseType)));
 
-            CreateMap<Course, CourseListDTO>().ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
-            CreateMap<CourseListDTO, Course>();
+            CreateMap<CourseDetailsDTO, Course>()
+                .ForMember(dest => dest.CourseType, opt => opt.MapFrom(src => GetCourseTypeInt(src.CourseType)));
 
-            CreateMap<Course, CourseAddDTO>();
-            CreateMap<CourseAddDTO, Course>();
+            // Fix the mapping for Course to CourseListDTO - focus on the Id property
+            CreateMap<Course, CourseListDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id)) // Explicitly map string Id to int Id
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null));
 
-            CreateMap<Category,CategoryReadDTO>();
+            CreateMap<CourseListDTO, Course>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString())); // Convert int Id back to string
+
+            // Fix mapping for CourseAddDTO to Course
+            CreateMap<Course, CourseAddDTO>()
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryID))
+                .ForMember(dest => dest.CourseType, opt => opt.MapFrom(src => GetCourseTypeString(src.CourseType)));
+
+            CreateMap<CourseAddDTO, Course>()
+                .ForMember(dest => dest.CourseType, opt => opt.MapFrom(src => GetCourseTypeInt(src.CourseType)))
+                .ForMember(dest => dest.CategoryID, opt => opt.MapFrom(src => src.CategoryId))
+                .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id)));
+
+            CreateMap<Category, CategoryReadDTO>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.Name));
 
             CreateMap<BasketItem, BasketItemDto>().ReverseMap();
             CreateMap<CustomerBasket, CustomerBasketDto>().ReverseMap();
 
-
             CreateMap<Category, CategoryDTO>();
             CreateMap<CategoryDTO, Category>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id)));
+        }
 
+        // Helper methods to convert between string and int for CourseType
+        private string GetCourseTypeString(int courseType)
+        {
+            return courseType switch
+            {
+                1 => "Online",
+                2 => "Recorded",
+                3 => "Live",
+                _ => "Online", // Default
+            };
+        }
+
+        private int GetCourseTypeInt(string courseType)
+        {
+            return courseType?.ToLower() switch
+            {
+                "online" => 1,
+                "recorded" => 2,
+                "live" => 3,
+                _ => 1, // Default to Online
+            };
         }
     }
 }

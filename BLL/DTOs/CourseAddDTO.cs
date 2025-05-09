@@ -11,49 +11,55 @@ namespace BLL.DTOs
     {
         public string Id { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string Title { get; set; } // e.g., "تعلم النحو من الصفر حتى الإحتراف"
+            [Required(ErrorMessage = "Title is required")]
+        [MaxLength(100, ErrorMessage = "Title cannot exceed 100 characters")]
+        public string Title { get; set; }
 
-        [Range(1, 5)]
-        public int Rating { get; set; } // e.g., 4 / 3
-
-        // Intro Video
-        [MaxLength(500)]
-        public string Intro_Video { get; set; } // Embedded video URL
-
-        // Key Stats
-        public int N_Lessons { get; set; } // e.g.,  11 lesson
-        public TimeSpan Duration { get; set; } // e.g., 8h 30m
-        public DateTime Last_Update { get; set; } // e.g., "تم التحديث: ٢٠٢٣-١٠-١٥"
-        public int? CategoryId { get; set; }
-
-        // Content Sections
         [MaxLength(2000)]
-        public string Description { get; set; } // Main overview (1-2 paragraphs)
+        public string Description { get; set; }
 
         [MaxLength(4000)]
         public string Details { get; set; }
-        public string Level { get; set; }
+
+        [Required(ErrorMessage = "Level is required")]
+        public string Level { get; set; } = "Beginner";
+
+        [MaxLength(500)]
         public string Path { get; set; }
-        public string ThumbnailUrl { get; set; }
 
-
-        // Progress Tracking (if user is enrolled)
-        //public bool IsEnrolled { get; set; }
-        //public decimal CompletionPercentage { get; set; }
-
-        // Call-to-Action
         public float Price { get; set; }
+
         public bool IsFree { get; set; }
-        //public string EnrollmentUrl { get; set; } // e.g., "/enroll/123"
 
-        // Navigation Links
-        //public Dictionary<string, string> Links { get; set; } = new()
-        //{
-        //    ["self"] = "", // Will be "/api/courses/123"
-        //    ["lessons"] = "" // Will be "/api/courses/123/lessons"
+        public string Intro_Video { get; set; }
 
-        //};
+        [Required(ErrorMessage = "Category is required")]
+        public string CategoryId { get; set; }
+
+        [MaxLength(200)]
+        public string Tags { get; set; }
+
+        [Required(ErrorMessage = "Course type is required")]
+        public string CourseType { get; set; }
+        public DateTime Last_Update { get; set; }
+
+        public string ThumbnailUrl { get; set; }
+        
+        public int CourseTypeAsInt 
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(CourseType))
+                    return 0;
+                
+                return CourseType switch
+                {
+                    "Online" => 1,
+                    "Recorded" => 2,
+                    "Live" => 3,
+                    _ => 0
+                };
+            }
+        }
     }
 }
