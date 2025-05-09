@@ -1,42 +1,51 @@
-﻿using System.Net;
+using System.Net;
 using System.Text.Json;
+using E_Learning_API.Models.Response;
 
-public class ExceptionMiddleware
+namespace E_Learning_API.Middlewares
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ExceptionMiddleware> _logger;
-    private readonly IHostEnvironment _env;
-
-    public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
+    public class ExceptionMiddleware
     {
-        _next = next;
-        _logger = logger;
-        _env = env;
-    }
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionMiddleware> _logger;
+        private readonly IHostEnvironment _env;
 
-    public async Task InvokeAsync(HttpContext httpContext)
-    {
-        try
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
         {
-            await _next(httpContext);
+            _next = next;
+            _logger = logger;
+            _env = env;
         }
-        catch (Exception ex)
+
+        public async Task InvokeAsync(HttpContext context)
         {
-            _logger.LogError(ex, ex.Message);
-            await HandleExceptionAsync(httpContext, ex);
+            try
+            {
+                await _next(context);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                var response = _env.IsDevelopment()
+                    ? new ApiExceptionResponse(
+                        (int)HttpStatusCode.InternalServerError,
+                        ex.Message,
+                        ex.StackTrace)
+                    : new ApiExceptionResponse(
+                        (int)HttpStatusCode.InternalServerError);
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                };
+
+                var json = JsonSerializer.Serialize(response, options);
+                await context.Response.WriteAsync(json);
+            }
         }
-    }
-
-    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
-    {
-        context.Response.ContentType = "application/json";
-        var statusCode = (int)HttpStatusCode.InternalServerError;
-        var response = _env.IsDevelopment()
-            ? new ApiExceptionResponse(statusCode, exception.Message, exception.StackTrace)
-            : new ApiExceptionResponse(statusCode, "Internal Server Error");
-
-        context.Response.StatusCode = statusCode;
-        await context.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 }
-

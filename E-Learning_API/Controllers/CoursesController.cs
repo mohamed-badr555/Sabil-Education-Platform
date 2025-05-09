@@ -3,6 +3,7 @@ using BLL.DTOs;
 using BLL.Managers.CourseManager;
 using BLL.Specifications.Courses;
 using DAL.Data.Models;
+using E_Learning_API.Models.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,132 +11,128 @@ namespace E_Learning_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CoursesController : ControllerBase
+    public class CoursesController : BaseApiController
     {
-        private readonly ICourseManager _courseMananger;
+        private readonly ICourseManager _courseManager;
 
         public CoursesController(ICourseManager courseMananger)
         {
-            _courseMananger = courseMananger;
+            _courseManager = courseMananger;
         }
 
-
-        [HttpGet]             // matches GET /courses
-        public async Task<ActionResult<Pagination<CourseListDTO>>> GetAllAsync([FromQuery] CourseSpecsParams courseparams)
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponseFormat<Pagination<CourseListDTO>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponseFormat<Pagination<CourseListDTO>>>> GetAllAsync([FromQuery] CourseSpecsParams courseparams)
         {
-            var pagination = await _courseMananger.GetAllAsync(courseparams);
-            return Ok(pagination);
-
+            var pagination = await _courseManager.GetAllAsync(courseparams);
+            return OkResponse(pagination, "List of courses");
         }
 
-
-        [HttpGet("popular")]      // matches GET /courses/popular
-        public async Task<IActionResult> GetPopular()
+        [HttpGet("popular")]
+        [ProducesResponseType(typeof(ApiResponseFormat<Pagination<CourseListDTO>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponseFormat<Pagination<CourseListDTO>>>> GetPopular()
         {
-            var courses = await _courseMananger.GetPopularAsync();
-            return Ok(courses);
+            var courses = await _courseManager.GetPopularAsync();
+            return OkResponse(courses, "Popular courses retrieved");
         }
 
-
-
-        [HttpGet("categories")]      // matches GET /courses/categories
-        public async Task<IActionResult> GetAllCategories()
+        [HttpGet("categories")]
+        [ProducesResponseType(typeof(ApiResponseFormat<IEnumerable<CategoryReadDTO>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponseFormat<IEnumerable<CategoryReadDTO>>>> GetAllCategories()
         {
-            var courses = await _courseMananger.GetAllCategoriesAsync();
-            return Ok(courses);
+            var categories = await _courseManager.GetAllCategoriesAsync();
+            return OkResponse(categories, "Course categories retrieved");
         }
-
-
 
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetById(string Id)
+        [ProducesResponseType(typeof(ApiResponseFormat<CourseContentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponseFormat<CourseContentDTO>>> GetById(string Id)
         {
-            var course = await _courseMananger.GetByIdAsync(Id);
-            if (course == null)
-                return NotFound();
-            return Ok(course);
-        }
+            try
+            {
+                var course = await _courseManager.GetByIdAsync(Id);
+                if (course == null)
+                    return NotFoundResponse<CourseContentDTO>($"Course with ID {Id} not found");
 
+                return OkResponse(course, "Course details");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFoundResponse<CourseContentDTO>(ex.Message);
+            }
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Add(CourseAddDTO courseAddDto)
+        [ProducesResponseType(typeof(ApiResponseFormat<string>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ApiResponseFormat<string>>> Add(CourseAddDTO courseAddDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequestResponse<string>("Invalid model state");
 
-            await _courseMananger.AddAsync(courseAddDto);
-            return NoContent();
+            await _courseManager.AddAsync(courseAddDto);
+            return NoContentResponse<string>("Course added successfully");
         }
-
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCourse(string id, CourseAddDTO course)
+        [ProducesResponseType(typeof(ApiResponseFormat<string>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ApiResponseFormat<string>>> UpdateCourse(string id, CourseAddDTO course)
         {
             if (id != course.Id)
-                return BadRequest();
+                return BadRequestResponse<string>("Course ID mismatch");
 
-            var existingCourse = await _courseMananger.GetByIdAsync(id);
+            var existingCourse = await _courseManager.GetByIdAsync(id);
             if (existingCourse == null)
-                return NotFound();
+                return NotFoundResponse<string>($"Course with ID {id} not found");
 
-            await _courseMananger.UpdateAsync(course);
-            return NoContent();
+            await _courseManager.UpdateAsync(course);
+            return NoContentResponse<string>("Course updated successfully");
         }
-
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourse(string id)
+        [ProducesResponseType(typeof(ApiResponseFormat<string>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ApiResponseFormat<string>>> DeleteCourse(string id)
         {
-            var course = await _courseMananger.GetByIdAsync(id);
+            var course = await _courseManager.GetByIdAsync(id);
             if (course == null)
-                return NotFound();
+                return NotFoundResponse<string>($"Course with ID {id} not found");
 
-            await _courseMananger.DeleteAsync(id);
-            return NoContent();
+            await _courseManager.DeleteAsync(id);
+            return NoContentResponse<string>("Course deleted successfully");
         }
-
 
         [HttpGet("{coursePath}/units/{unitOrderIndex}/videos/{videoOrderIndex}")]
-        public async Task<IActionResult> GetVideo(string coursePath, int unitOrderIndex, int videoOrderIndex)
+        [ProducesResponseType(typeof(ApiResponseFormat<VideoDetailsDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ApiResponseFormat<VideoDetailsDTO>>> GetVideo(string coursePath, int unitOrderIndex, int videoOrderIndex)
         {
-            var video = await _courseMananger.GetVideoAsync(coursePath, unitOrderIndex, videoOrderIndex);
+            var video = await _courseManager.GetVideoAsync(coursePath, unitOrderIndex, videoOrderIndex);
 
             if (video == null)
-            {
-                return NotFound(new { Message = "Video not found." });
-            }
+                return NotFound("Video not found");
 
-            return Ok(new
-            {
-                Code = 200,
-                Message = "Video retrieved successfully",
-                Data = video
-            });
+            return OkResponse(video, "Video retrieved successfully");
         }
-
 
         [HttpGet("{coursePath}/content")]
-        public async Task<IActionResult> GetCourseContent(string coursePath)
+        [ProducesResponseType(typeof(ApiResponseFormat<CourseContentDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ApiResponseFormat<CourseContentDTO>>> GetCourseContent(string coursePath)
         {
-            var content = await _courseMananger.GetCourseContentAsync(coursePath);
+            var content = await _courseManager.GetCourseContentAsync(coursePath);
 
             if (content == null)
-            {
-                return NotFound(new { Message = "content not found." });
-            }
+                return NotFound("Course content not found");
 
-            return Ok(new
-            {
-                Code = 200,
-                Message = "content retrieved successfully",
-                Data = content
-            });
+            return OkResponse(content, "Content retrieved successfully");
         }
-
     }
-
-
-
-
-
 }

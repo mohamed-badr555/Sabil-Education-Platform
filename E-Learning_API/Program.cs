@@ -10,6 +10,7 @@ using BLL.Managers.CourseManager;
 using System.Text.Json.Serialization;
 using DAL.Repositories.VideoRepo;
 using DAL.Repositories.CourseRepo;
+using E_Learning_API.Middlewares;
 
 
 
