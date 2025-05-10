@@ -148,33 +148,9 @@ namespace BLL.Managers.CourseManager
             }
         }
 
-        //public async Task<List<CourseListDTO>> SearchCoursesAsync(string searchTerm)
-        //{
-        //    var courses = await _courseRepo.GetAllAsync();
-        //    var coursesDtos = mapper.Map<List<CourseListDTO>>(courses);
-            
-        //    if (!string.IsNullOrWhiteSpace(searchTerm))
-        //    {
-        //        searchTerm = searchTerm.ToLower();
-
-        //        coursesDtos = coursesDtos
-        //            .Where(c => c.Title.ToLower().Contains(searchTerm) ||
-        //                        c.Description.ToLower().Contains(searchTerm))
-        //            .ToList();
-        //    }
 
 
 
-        //public async Task UpdateAsync(CourseAddDTO CourseDTO)
-        //{
-
-        //    courseDTOs = courseDTOs.Where(c =>
-        //        (string.IsNullOrWhiteSpace(level) || c.Level.ToLower().Contains(level)) &&
-        //        (string.IsNullOrWhiteSpace(category) || c.CategoryName.ToLower().Contains(category))
-        //    ).ToList();
-
-        //    return courseDTOs;
-        //}
 
         public async Task UpdateAsync(CourseAddDTO courseDto)
         {
@@ -242,6 +218,24 @@ namespace BLL.Managers.CourseManager
             //}
 
             return dto;
+        }
+        public async Task<CourseDetailsDTO> GetCourseDetailsForEditAsync(string id)
+        {
+            var course = await _courseRepo.GetByIdAsync(id);
+            if (course == null)
+                throw new KeyNotFoundException($"Course with ID {id} not found.");
+
+            // Map to CourseDetailsDTO
+            var courseDto = mapper.Map<CourseDetailsDTO>(course);
+
+            // Get the category name
+            var category = await categoryRepo.GetByIdAsync(course.CategoryID);
+            if (category != null)
+            {
+                courseDto.CategoryName = category.Name;
+            }
+
+            return courseDto;
         }
     }
 

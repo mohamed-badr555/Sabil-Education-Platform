@@ -23,6 +23,10 @@ namespace BLL.MappingProfiles
 
             CreateMap<CourseDetailsDTO, Course>()
                 .ForMember(dest => dest.CourseType, opt => opt.MapFrom(src => GetCourseTypeInt(src.CourseType)));
+            CreateMap<Course, CourseDetailsDTO>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
+            
+
 
             // Fix the mapping for Course to CourseListDTO - focus on the Id property
             CreateMap<Course, CourseListDTO>()

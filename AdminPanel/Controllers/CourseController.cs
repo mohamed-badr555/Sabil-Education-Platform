@@ -116,16 +116,17 @@ namespace AdminPanel.Controllers
         {
             try
             {
-                var course = await _courseManager.GetByIdAsync(id);
+                var course = await _courseManager.GetCourseDetailsForEditAsync(id);
                 var categories = await _categoryManager.GetAllCategoriesAsync();
 
                 ViewBag.Categories = categories.Select(c => new SelectListItem
                 {
                     Value = c.Id,
-                    Text = c.Name
+                    Text = c.Name,
+                    Selected = (c.Name == course.CategoryName)
                 }).ToList();
 
-                return PartialView("_EditCourse", course);
+                return View(course);
             }
             catch (KeyNotFoundException)
             {
@@ -134,7 +135,8 @@ namespace AdminPanel.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching course for edit");
-                return StatusCode(500);
+                TempData["Error"] = "Failed to load course for editing.";
+                return RedirectToAction(nameof(Index));
             }
         }
 

@@ -318,3 +318,31 @@ body.sidebar-open::before {
     overflow-y: auto;
     max-height: calc(100vh - 210px);  
 }
+/* Modal styling */
+.modal-dialog-scrollable .modal-body {
+    overflow-y: auto;
+    max-height: calc(100vh - 210px); /* Adjust based on header/footer size */
+}
+
+/* Improve form field appearance */
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.25);
+}
+
+/* Input validation styling */
+.field-validation-error {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Fix for select boxes */
+select.form-select {
+    appearance: auto;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    padding-right: 2rem;
+}

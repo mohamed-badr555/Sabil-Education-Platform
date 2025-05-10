@@ -19,7 +19,7 @@ namespace BLL.DTOs
         public int progress { get; set; }
         public TimeSpan Duration { get; set; } // e.g., 8h 30m
                                                //public string? LastVideo { get; set; }   // Revise here
-
+        public string CourseType { get; set; }
 
         public ICollection<UnitDTO> Units { get; set; }
 
