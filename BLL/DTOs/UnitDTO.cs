@@ -12,13 +12,9 @@ namespace BLL.DTOs
     {
         public string Id { get; set; }
         public string Title { get; set; }
-
         public string Description { get; set; }
         public int Order { get; set; }
-
+        public string CourseID { get; set; } // Added the missing CourseID property
         public ICollection<VideoDetailsDTO> videos { get; set; }
-
-    
-
     }
 }

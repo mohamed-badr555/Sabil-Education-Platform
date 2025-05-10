@@ -19,6 +19,8 @@ using BLL.Managers.BasketManager;
 using E_Learning_API.Middlewares;
 using E_Learning_API.Extensions;
 using BLL.Managers.CategoryManager;
+using BLL.Managers.UnitManager;
+using DAL.Repositories.CourseUnitRepo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +32,8 @@ builder.Services.AddScoped<IVideoRepo, VideoRepo>();
 builder.Services.AddScoped<ICourseRepo, CourseRepo>();
 
 
-
+builder.Services.AddScoped<ICourseUnitRepo, CourseUnitRepo>();
+builder.Services.AddScoped<IUnitManager, UnitManager>();
 
 // Add application services including error handling
 builder.Services.AddApplicationServices();

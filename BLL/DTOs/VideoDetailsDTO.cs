@@ -15,7 +15,7 @@ namespace BLL.DTOs
         public string? Description { get; set; }
         public string URL { get; set; }
         public int order { get; set; }
-        public string? ExamID { get; set; }
+        public string? ExamID { get; set; } = null;
         public int unitorder { get; set; }
 
         public string CourseUnitID { get; set; } 

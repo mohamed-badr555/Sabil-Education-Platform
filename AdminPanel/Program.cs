@@ -1,9 +1,11 @@
 using BLL.Managers.CategoryManager;
 using BLL.Managers.CourseManager;
+using BLL.Managers.UnitManager;
 using DAL.Data.Models;
 using DAL.DB_Context;
 using DAL.Repositories;
 using DAL.Repositories.CourseRepo;
+using DAL.Repositories.CourseUnitRepo;
 using DAL.Repositories.VideoRepo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +39,8 @@ namespace AdminPanel
             builder.Services.AddScoped<ICourseManager, CourseManager>();
             builder.Services.AddScoped<IVideoRepo, VideoRepo>();
             builder.Services.AddScoped<ICourseRepo, CourseRepo>();
-
+            builder.Services.AddScoped<ICourseUnitRepo, CourseUnitRepo>();
+            builder.Services.AddScoped<IUnitManager, UnitManager>();
             // Register AutoMapper if you're using it (assuming you have a MappingProfile class)
             builder.Services.AddAutoMapper(typeof(BLL.MappingProfiles.MappingProfile).Assembly);
 

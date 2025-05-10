@@ -9,6 +9,7 @@ namespace DAL.Repositories.VideoRepo
 {
     public interface IVideoRepo : IGenericRepository<Video>
     {
-        public Task<Video> GetVideoByCoursePathAndIndicesAsync(string coursePath, int unitOrderIndex, int videoOrderIndex);
+        Task<Video> GetVideoByCoursePathAndIndicesAsync(string coursePath, int unitOrderIndex, int videoOrderIndex);
+        Task<bool> OrderExistsInUnitAsync(string unitId, int order, string videoIdToExclude = null);
     }
 }

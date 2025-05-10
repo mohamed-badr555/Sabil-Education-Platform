@@ -1,8 +1,7 @@
-﻿@{
+﻿@model IEnumerable<BLL.DTOs.UnitDTO>
+@{
     ViewData["Title"] = "Units";
-
 }
-@model CourseUnit
 <style>
     .span {
         transform: rotate(180deg);
@@ -19,234 +18,339 @@
 </style>
 <section class="p-2 border-end border-top border-4 border-primary">
     <div class="d-flex justify-content-between align-items-center">
-
-      <div> Number Of Units : 1</div>
       <div>
-
+        <h2>@ViewBag.CourseTitle</h2>
+        <div>Number Of Units: @Model.Count()</div>
+      </div>
+      <div>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUnit">
           <i class="fa-solid fa-plus"></i>
           Add Unit
         </button>
-
-
-
       </div>
-
     </div>
-    <hr class="link-primary " style="height: 5px; width: 100%;">
-
-    <div class="accordion" id="">
-      <div class="accordion-item">
-        <div class="accordion-header d-flex justify-content-between align-items-center p-3 pb-0 mb-0">
-          <h3 class="">Watch Lectures</h3>
-          <div class="d-flex justify-content-between align-items-center column-gap-lg-4 fs-5">
-            <button id="span_chevron" class="border-0 bg-white "><i class="fa-solid fa-chevron-down"></i></button>
-            <button class="border-0 bg-white text-success" data-bs-toggle="modal"
-            data-bs-target="#AddLesson"><i class="fa-solid fa-plus"></i></button>
-            <button class="border-0 bg-white text-warning" data-bs-toggle="modal"
-            data-bs-target="#EditUnit"><i class="fa-solid fa-pen-to-square"></i></button>
-            <button class="border-0 bg-white text-danger"><i class="fa-solid fa-trash"></i></button>
-          </div>
+    
+    <hr class="link-primary" style="height: 5px; width: 100%;">
+    
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <hr class="text-primary">
-        <div id="UnitToggle" class="accordion-collapse collapse show">
-          <h4 class="ps-3">lessons : 4</h4>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="card m-3">
-                <iframe height="300px" src="https://youtube.com/embed/9OtuZtCkKGU" allowfullscreen>
-                </iframe>
-                <div class="card-body">
-                  <h4 class="card-title fw-bolder">lesson_1</h4>
-                  <div class="d-flex w-100">
+    }
 
-                    <button type="button" class="btn btn-outline-warning flex-grow-1 mx-2" data-bs-toggle="modal"
-                      data-bs-target="#EditLesson">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                      Edit lesson
-                    </button>
-                    <button type="button" class="btn btn-danger flex-grow-1 mx-2">
-                      <i class="fa-solid fa-trash" style="color: #ffffff;"></i>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-                    </button>
-                  </div>
-                </div>
-
-              </div>
+    <div id="unitsAccordion">
+      @foreach (var unit in Model.OrderBy(u => u.Order))
+      {
+        <div class="accordion-item mb-3">
+          <div class="accordion-header d-flex justify-content-between align-items-center p-3 pb-0 mb-0">
+            <h3>@unit.Title</h3>
+            <div class="d-flex justify-content-between align-items-center column-gap-lg-4 fs-5">
+              <button class="border-0 bg-white toggle-unit" data-bs-toggle="collapse" data-bs-target="#unit_@unit.Id">
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
+              <button class="border-0 bg-white text-success" data-bs-toggle="modal" data-bs-target="#addVideo" 
+                      data-unit-id="@unit.Id" data-unit-title="@unit.Title">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+              <button class="border-0 bg-white text-warning" data-bs-toggle="modal" data-bs-target="#editUnit"
+                      data-unit-id="@unit.Id" data-unit-title="@unit.Title" data-unit-description="@unit.Description" 
+                      data-unit-order="@unit.Order">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <form asp-action="DeleteUnit" method="post" class="d-inline" 
+                    onsubmit="return confirm('Are you sure you want to delete this unit? This will also delete all videos in this unit.');">
+                <input type="hidden" name="id" value="@unit.Id" />
+                <input type="hidden" name="courseId" value="@ViewBag.CourseId" />
+                <button type="submit" class="border-0 bg-white text-danger">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </form>
             </div>
-            <div class="col-md-4">
-              <div class="card m-3">
-                <iframe height="300px" src="https://youtube.com/embed/9OtuZtCkKGU" allowfullscreen>
-                </iframe>
-                <div class="card-body">
-                  <h4 class="card-title fw-bolder">lesson_1</h4>
-                  <div class="d-flex w-100">
-
-                    <button type="button" class="btn btn-outline-warning flex-grow-1 mx-2" data-bs-toggle="modal"
-                      data-bs-target="#EditLesson">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                      Edit lesson
-                    </button>
-                    <button type="button" class="btn btn-danger flex-grow-1 mx-2">
-                      <i class="fa-solid fa-trash" style="color: #ffffff;"></i>
-
-                    </button>
+          </div>
+          <hr class="text-primary">
+          <div id="unit_@unit.Id" class="accordion-collapse collapse show">
+            <h4 class="ps-3">Lessons: @(unit.videos?.Count() ?? 0)</h4>
+            <div class="row">
+              @if (unit.videos != null && unit.videos.Any())
+              {
+                foreach (var video in unit.videos.OrderBy(v => v.order))
+                {
+                  <div class="col-md-4">
+                    <div class="card m-3">
+                      <iframe height="300px" src="@video.URL" allowfullscreen></iframe>
+                      <div class="card-body">
+                        <h4 class="card-title fw-bolder">@video.Title</h4>
+                        <p class="card-text">@(string.IsNullOrEmpty(video.Description) ? "No description available" : video.Description)</p>
+                        <div class="d-flex w-100">
+                          <button type="button" class="btn btn-outline-warning flex-grow-1 mx-2" 
+                                  data-bs-toggle="modal" data-bs-target="#editVideo"
+                                  data-video-id="@video.Id" data-video-title="@video.Title" 
+                                  data-video-description="@video.Description" data-video-url="@video.URL"
+                                  data-video-order="@video.order" data-unit-id="@unit.Id">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            Edit Lesson
+                          </button>
+                          <form asp-action="DeleteVideo" method="post" class="flex-grow-1 mx-2"
+                                onsubmit="return confirm('Are you sure you want to delete this video?');">
+                            <input type="hidden" name="id" value="@video.Id" />
+                            <input type="hidden" name="unitId" value="@unit.Id" />
+                            <button type="submit" class="btn btn-danger w-100">
+                              <i class="fa-solid fa-trash" style="color: #ffffff;"></i>
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                }
+              }
+              else
+              {
+                <div class="col-12 text-center py-4">
+                  <p class="text-muted">No videos available for this unit. Click the "+" button to add a video.</p>
                 </div>
-
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card m-3">
-                <iframe height="300px" src="https://youtube.com/embed/9OtuZtCkKGU" allowfullscreen>
-                </iframe>
-                <div class="card-body">
-                  <h4 class="card-title fw-bolder">lesson_1</h4>
-                  <div class="d-flex w-100">
-
-                    <button type="button" class="btn btn-outline-warning flex-grow-1 mx-2" data-bs-toggle="modal"
-                      data-bs-target="#EditLesson">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                      Edit lesson
-                    </button>
-                    <button type="button" class="btn btn-danger flex-grow-1 mx-2">
-                      <i class="fa-solid fa-trash" style="color: #ffffff;"></i>
-
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="card m-3">
-                <iframe height="300px" src="https://youtube.com/embed/9OtuZtCkKGU" allowfullscreen>
-                </iframe>
-                <div class="card-body">
-                  <h4 class="card-title fw-bolder">lesson_1</h4>
-                  <div class="d-flex w-100">
-
-                    <button type="button" class="btn btn-outline-warning flex-grow-1 mx-2" data-bs-toggle="modal"
-                      data-bs-target="#EditLesson">
-                      <i class="fa-solid fa-pen-to-square"></i>
-                      Edit lesson
-                    </button>
-                    <button type="button" class="btn btn-danger flex-grow-1 mx-2">
-                      <i class="fa-solid fa-trash" style="color: #ffffff;"></i>
-
-                    </button>
-                  </div>
-                </div>
-
-              </div>
+              }
             </div>
           </div>
         </div>
-      </div>
+      }
+      
+      @if (!Model.Any())
+      {
+        <div class="alert alert-info text-center">
+          <p>No units available for this course. Click the "Add Unit" button to create one.</p>
+        </div>
+      }
     </div>
 
-    <div class="modal fade" tabindex="-1" id="EditLesson">
+    <!-- Edit Video Modal -->
+    <div class="modal fade" tabindex="-1" id="editVideo">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title ">Edit Lesson</h4>
+            <h4 class="modal-title">Edit Lesson</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">lesson Name</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="example: lesson_1">
+          <form asp-action="EditVideo" method="post">
+            <div class="modal-body">
+              <input type="hidden" name="Id" id="editVideoId">
+              <input type="hidden" name="CourseUnitID" id="editVideoUnitId">
+              
+              <div class="mb-3">
+                <label for="editVideoTitle" class="form-label">Lesson Name</label>
+                <input type="text" class="form-control" id="editVideoTitle" name="Title" required>
+              </div>
+              <div class="mb-3">
+                <label for="editVideoURL" class="form-label">Video Link</label>
+                <input type="text" class="form-control" id="editVideoURL" name="URL" 
+                       placeholder="example: https://www.youtube.com/watch?v=1" required>
+              </div>
+              <div class="mb-3">
+                <label for="editVideoOrder" class="form-label">Order</label>
+                <input type="number" class="form-control" id="editVideoOrder" name="order" min="1" required>
+              </div>
+              <div class="mb-3">
+                <label for="editVideoDescription" class="form-label">Video Description</label>
+                <textarea class="form-control" id="editVideoDescription" name="Description" rows="4"></textarea>
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">video link</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="example: https://www.youtube.com/watch?v=1">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">Video description</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1"   rows="4"></textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
-    <div class="modal fade" tabindex="-1" id="AddLesson">
+
+    <!-- Add Video Modal -->
+    <div class="modal fade" tabindex="-1" id="addVideo">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title ">Add Lesson</h4>
+            <h4 class="modal-title">Add Lesson</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">lesson Name</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="example: lesson_1">
+          <form asp-action="AddVideo" method="post">
+            <div class="modal-body">
+              <input type="hidden" name="CourseUnitID" id="addVideoUnitId">
+              
+              <div class="mb-3">
+                <label for="addVideoTitle" class="form-label">Lesson Name</label>
+                <input type="text" class="form-control" id="addVideoTitle" name="Title" 
+                       placeholder="example: Lesson 1" required>
+              </div>
+              <div class="mb-3">
+                <label for="addVideoURL" class="form-label">Video Link</label>
+                <input type="text" class="form-control" id="addVideoURL" name="URL" 
+                       placeholder="example: https://www.youtube.com/watch?v=1" required>
+              </div>
+              <div class="mb-3">
+                <label for="addVideoOrder" class="form-label">Order</label>
+                <input type="number" class="form-control" id="addVideoOrder" name="order" min="1" value="1" required>
+              </div>
+              <div class="mb-3">
+                <label for="addVideoDescription" class="form-label">Video Description</label>
+                <textarea class="form-control" id="addVideoDescription" name="Description" rows="4"></textarea>
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">video link</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="example: https://www.youtube.com/watch?v=1">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Add Lesson</button>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">Video description</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1"   rows="4"></textarea>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
-    <div class="modal fade" tabindex="-1" id="EditUnit">
+
+    <!-- Edit Unit Modal -->
+    <div class="modal fade" tabindex="-1" id="editUnit">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title ">Edit Unit</h4>
+            <h4 class="modal-title">Edit Unit</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Unit Name</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="example: Unit_1">
+          <form asp-action="EditUnit" method="post">
+            <div class="modal-body">
+              <input type="hidden" name="Id" id="editUnitId">
+              <input type="hidden" name="CourseID" value="@ViewBag.CourseId">
+              
+              <div class="mb-3">
+                <label for="editUnitTitle" class="form-label">Unit Name</label>
+                <input type="text" class="form-control" id="editUnitTitle" name="Title" required>
+              </div>
+              <div class="mb-3">
+                <label for="editUnitOrder" class="form-label">Order</label>
+                <input type="number" class="form-control" id="editUnitOrder" name="Order" min="1" required>
+              </div>
+              <div class="mb-3">
+                <label for="editUnitDescription" class="form-label">Unit Description</label>
+                <textarea class="form-control" id="editUnitDescription" name="Description" rows="4" required></textarea>
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">Unit description</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1"   rows="4"></textarea>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
+
+    <!-- Add Unit Modal -->
     <div class="modal fade" tabindex="-1" id="addUnit">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title ">Add Unit</h4>
+            <h4 class="modal-title">Add Unit</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Unit Name</label>
-              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="example: Unit_1">
+          <form asp-action="AddUnit" method="post">
+            <div class="modal-body">
+              <input type="hidden" name="CourseID" value="@ViewBag.CourseId">
+              
+              <div class="mb-3">
+                <label for="addUnitTitle" class="form-label">Unit Name</label>
+                <input type="text" class="form-control" id="addUnitTitle" name="Title" 
+                       placeholder="example: Unit 1" required>
+              </div>
+              <div class="mb-3">
+                <label for="addUnitOrder" class="form-label">Order</label>
+                <input type="number" class="form-control" id="addUnitOrder" name="Order" 
+                       min="1" value="@(Model.Count() + 1)" required>
+              </div>
+              <div class="mb-3">
+                <label for="addUnitDescription" class="form-label">Unit Description</label>
+                <textarea class="form-control" id="addUnitDescription" name="Description" 
+                          rows="4" required></textarea>
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">Unit description</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1"   rows="4"></textarea>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Add Unit</button>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
-  </section> 
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Toggle chevron icon for unit collapse
+            $('.toggle-unit').click(function() {
+                $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+            });
+            
+            // Handle Edit Unit modal data
+            $('#editUnit').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var unitId = button.data('unit-id');
+                var unitTitle = button.data('unit-title');
+                var unitDescription = button.data('unit-description');
+                var unitOrder = button.data('unit-order');
+                
+                var modal = $(this);
+                modal.find('#editUnitId').val(unitId);
+                modal.find('#editUnitTitle').val(unitTitle);
+                modal.find('#editUnitDescription').val(unitDescription);
+                modal.find('#editUnitOrder').val(unitOrder);
+            });
+            
+            // Handle Add Video modal data
+            $('#addVideo').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var unitId = button.data('unit-id');
+                var unitTitle = button.data('unit-title');
+                
+                var modal = $(this);
+                modal.find('#addVideoUnitId').val(unitId);
+                modal.find('.modal-title').text('Add Lesson to ' + unitTitle);
+                
+                // Get the max order of videos in this unit to set a default value
+                var maxOrder = 0;
+                $('#unit_' + unitId + ' .card').each(function() {
+                    var order = parseInt($(this).find('button[data-video-order]').data('video-order'));
+                    if (order > maxOrder) maxOrder = order;
+                });
+                modal.find('#addVideoOrder').val(maxOrder + 1);
+            });
+            
+            // Handle Edit Video modal data
+            $('#editVideo').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var videoId = button.data('video-id');
+                var videoTitle = button.data('video-title');
+                var videoDescription = button.data('video-description');
+                var videoUrl = button.data('video-url');
+                var videoOrder = button.data('video-order');
+                var unitId = button.data('unit-id');
+                
+                // Convert embed URL back to watch URL for better editing
+                if (videoUrl && videoUrl.includes('youtube.com/embed/')) {
+                    videoUrl = videoUrl.replace('youtube.com/embed/', 'youtube.com/watch?v=');
+                }
+                
+                var modal = $(this);
+                modal.find('#editVideoId').val(videoId);
+                modal.find('#editVideoTitle').val(videoTitle);
+                modal.find('#editVideoDescription').val(videoDescription);
+                modal.find('#editVideoURL').val(videoUrl);
+                modal.find('#editVideoOrder').val(videoOrder);
+                modal.find('#editVideoUnitId').val(unitId);
+            });
+        });
+    </script>
+}

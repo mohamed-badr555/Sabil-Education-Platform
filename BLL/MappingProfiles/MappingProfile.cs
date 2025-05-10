@@ -23,10 +23,6 @@ namespace BLL.MappingProfiles
 
             CreateMap<CourseDetailsDTO, Course>()
                 .ForMember(dest => dest.CourseType, opt => opt.MapFrom(src => GetCourseTypeInt(src.CourseType)));
-            CreateMap<Course, CourseDetailsDTO>()
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
-            
-
 
             // Fix the mapping for Course to CourseListDTO - focus on the Id property
             CreateMap<Course, CourseListDTO>()
@@ -59,8 +55,27 @@ namespace BLL.MappingProfiles
 
 
             CreateMap<Course, CourseContentDTO>()
-            .ForMember(dest => dest.StudentsCount, opt => opt.MapFrom(src => src.CourseAccounts.Count))
-            .ForMember(dest => dest.Units, opt => opt.MapFrom(src => src.CourseUnits));
+                .ForMember(dest => dest.StudentsCount, opt => opt.MapFrom(src => src.CourseAccounts.Count))
+                .ForMember(dest => dest.Units, opt => opt.MapFrom(src => src.CourseUnits));
+
+            // Fix for CourseUnit to UnitDTO mapping
+            CreateMap<CourseUnit, UnitDTO>()
+                .ForMember(dest => dest.videos, opt => opt.MapFrom(src => src.videos));
+
+            CreateMap<UnitDTO, CourseUnit>()
+                .ForMember(dest => dest.videos, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id)));
+
+            // Add Video to VideoDetailsDTO mapping
+            CreateMap<Video, VideoDetailsDTO>()
+                .ForMember(dest => dest.VideoComments, opt => opt.MapFrom(src => src.VideoComments));
+
+            CreateMap<VideoDetailsDTO, Video>()
+                .ForMember(dest => dest.VideoComments, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id)));
+
+            // Add VideoComment to VideoComment mapping (if needed)
+            CreateMap<VideoComment, VideoComment>();
         }
 
         // Helper methods to convert between string and int for CourseType
