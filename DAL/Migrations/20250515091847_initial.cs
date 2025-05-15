@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDB : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -230,41 +230,6 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseAccounts",
-                columns: table => new
-                {
-                    CourseID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FinishedUnits = table.Column<int>(type: "int", nullable: false),
-                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
-                    CompTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Progress = table.Column<int>(type: "int", nullable: false),
-                    LastVideo = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    RateText = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: true),
-                    RateStars = table.Column<int>(type: "int", nullable: true),
-                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CourseAccounts", x => new { x.UserId, x.CourseID });
-                    table.ForeignKey(
-                        name: "FK_CourseAccounts_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CourseAccounts_Courses_CourseID",
-                        column: x => x.CourseID,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CourseUnits",
                 columns: table => new
                 {
@@ -313,6 +278,46 @@ namespace DAL.Migrations
                         name: "FK_Videos_Exams_ExamID",
                         column: x => x.ExamID,
                         principalTable: "Exams",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CourseAccounts",
+                columns: table => new
+                {
+                    CourseID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FinishedUnits = table.Column<int>(type: "int", nullable: false),
+                    IsCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    CompTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Progress = table.Column<int>(type: "int", nullable: false),
+                    LastVideoID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    RateText = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: true),
+                    RateStars = table.Column<int>(type: "int", nullable: true),
+                    Id = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseAccounts", x => new { x.UserId, x.CourseID });
+                    table.ForeignKey(
+                        name: "FK_CourseAccounts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CourseAccounts_Courses_CourseID",
+                        column: x => x.CourseID,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CourseAccounts_Videos_LastVideoID",
+                        column: x => x.LastVideoID,
+                        principalTable: "Videos",
                         principalColumn: "Id");
                 });
 
@@ -476,6 +481,11 @@ namespace DAL.Migrations
                 name: "IX_CourseAccounts_CourseID",
                 table: "CourseAccounts",
                 column: "CourseID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseAccounts_LastVideoID",
+                table: "CourseAccounts",
+                column: "LastVideoID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_CategoryID",

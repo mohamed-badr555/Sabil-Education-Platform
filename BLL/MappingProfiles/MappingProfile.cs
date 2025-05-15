@@ -54,9 +54,17 @@ namespace BLL.MappingProfiles
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id)));
 
 
-            CreateMap<Course, CourseContentDTO>()
-                .ForMember(dest => dest.StudentsCount, opt => opt.MapFrom(src => src.CourseAccounts.Count))
-                .ForMember(dest => dest.Units, opt => opt.MapFrom(src => src.CourseUnits));
+            CreateMap<CourseAccount, CourseContentDTO>()
+                .ForMember(dest => dest.Units, opt => opt.MapFrom(src => src.course.CourseUnits))
+                .ForMember(dest => dest.lastAccessedVideoId, opt => opt.MapFrom(src => src.LastVideoID))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.course.Description))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.course.Duration))
+                .ForMember(dest => dest.ThumbnailUrl, opt => opt.MapFrom(src => src.course.ThumbnailUrl))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.course.Title))
+                .ForMember(dest => dest.CourseType, opt => opt.MapFrom(src => src.course.CourseType))
+                .ForMember(dest => dest.progress, opt => opt.MapFrom(src => src.Progress))
+                .ForMember(dest => dest.StudentsCount, opt => opt.MapFrom(src => src.course.StudentCount));
+
 
             // Fix for CourseUnit to UnitDTO mapping
             CreateMap<CourseUnit, UnitDTO>()
@@ -76,6 +84,30 @@ namespace BLL.MappingProfiles
 
             // Add VideoComment to VideoComment mapping (if needed)
             CreateMap<VideoComment, VideoComment>();
+
+
+            CreateMap<CourseAccount, MyCourseDTO>()
+                .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.CourseID))
+                .ForMember(dest => dest.IsCompleted, opt => opt.MapFrom(src => src.IsCompleted))
+                .ForMember(dest => dest.subscriptionTime, opt => opt.MapFrom(src => src.StartDate))
+                .ForMember(dest => dest.progressPercentage, opt => opt.MapFrom(src => src.Progress))
+                .ForMember(dest => dest.LastVideoId, opt => opt.MapFrom(src => src.LastVideo))
+                .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.CourseID))
+                .ForMember(dest => dest.title, opt => opt.MapFrom(src => src.course.Title))
+                .ForMember(dest => dest.thumbnail, opt => opt.MapFrom(src => src.course.ThumbnailUrl))
+                .ForMember(dest => dest.path, opt => opt.MapFrom(src => src.course.Path))
+                .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.CourseID))
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.course.Duration))
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.course.Category.Name));
+
+
+
+
+
+
+
+
+
         }
 
         // Helper methods to convert between string and int for CourseType

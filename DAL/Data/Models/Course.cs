@@ -45,6 +45,11 @@ namespace DAL.Data.Models
         public int CourseType { get; set; }
 
 
+        public int StudentCount { get; set; }
+
+
+
+
 
         #region Category - Course (1-M)
         [Required(ErrorMessage = "Category is required.")]

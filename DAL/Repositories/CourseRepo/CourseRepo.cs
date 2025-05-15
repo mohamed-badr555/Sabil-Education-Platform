@@ -12,14 +12,14 @@ namespace DAL.Repositories.CourseRepo
     public class CourseRepo : GenericRepository<Course>, ICourseRepo
     {
         public CourseRepo(E_LearningDB context) : base(context) { }
-        public async Task<Course> GetCourseByPathAsync(string coursePath, string userId = null)
+        public async Task<CourseAccount> GetCourseByPathAsync(string coursePath, string userId = null)
         {
-            var course = await _dbContext.Courses
+            var course = await _dbContext.CourseAccounts
                 .AsNoTracking()
-                .Include(c => c.CourseUnits)
-                    .ThenInclude(u => u.videos.ToList().OrderBy(v => v.order))
-                .Include(c => c.CourseAccounts)
-                .FirstOrDefaultAsync(c => c.Path == coursePath);
+                .Include(ca=>ca.course)
+                .ThenInclude(c => c.CourseUnits)
+                .ThenInclude(u => u.videos.ToList().OrderBy(v => v.order))
+                .FirstOrDefaultAsync(ca => ca.course.Path == coursePath);
 
             if (course == null)
                 return null;
@@ -27,6 +27,15 @@ namespace DAL.Repositories.CourseRepo
 
 
             return course;
+        }
+
+        public async Task<IEnumerable<CourseAccount>> GetCoursesByUsernameAsync(string username)
+        {
+            return await _dbContext.CourseAccounts
+                .Include(ca=>ca.course)
+                .ThenInclude(c=>c.Category)
+                .Where(ca => ca.User.UserName == username)
+                .ToListAsync();
         }
 
 

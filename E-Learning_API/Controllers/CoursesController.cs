@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using BLL.DTOs;
 using BLL.Managers.CourseManager;
 using BLL.Specifications.Courses;
@@ -38,7 +39,7 @@ namespace E_Learning_API.Controllers
         public async Task<ActionResult<ApiResponseFormat<Pagination<CourseListDTO>>>> GetPopular()
         {
             var courses = await _courseManager.GetPopularAsync();
-            return OkResponse(courses, "Popular courses retrieved");
+            return OkResponse(courses, "List of Courses");
         }
 
         [HttpGet("categories")]
@@ -120,7 +121,7 @@ namespace E_Learning_API.Controllers
             var video = await _courseManager.GetVideoAsync(coursePath, unitOrderIndex, videoOrderIndex);
 
             if (video == null)
-                return NotFound("Video not found");
+                return BadRequestResponse<VideoDetailsDTO>("Invalid video or unit order index");
 
             return OkResponse(video, "Video retrieved successfully");
         }
@@ -136,6 +137,26 @@ namespace E_Learning_API.Controllers
                 return NotFound("Course content not found");
 
             return OkResponse(content, "Content retrieved successfully");
+        }
+
+
+        [HttpGet("mine")]
+        [ProducesResponseType(typeof(ApiResponseFormat<IEnumerable<MyCourseDTO>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
+        //[Authorize] // Require authentication
+        public async Task<ActionResult<ApiResponseFormat<IEnumerable<MyCourseDTO>>>> GetMyCourses()
+        {
+            //var username = User.Identity?.Name;
+            var username = "yousseff2255";
+
+            if (string.IsNullOrEmpty(username))
+            {
+                return Unauthorized();
+            }
+
+            var courses = await _courseManager.GetCoursesByUsernameAsync(username);
+            return OkResponse(courses, "courses retrieved successfully");
+
         }
     }
 }

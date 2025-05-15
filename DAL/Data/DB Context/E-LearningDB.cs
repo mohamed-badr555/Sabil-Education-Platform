@@ -112,6 +112,12 @@ namespace DAL.DB_Context
                 entity.Property(a => a.URL).IsRequired();
             });
 
+            modelBuilder.Entity<CourseAccount>()
+        .HasOne(ca => ca.LastVideo)
+        .WithMany() // Assuming no inverse navigation property in Video
+        .HasForeignKey(ca => ca.LastVideoID)
+        .IsRequired(false); // Since LastVideoID is nullable
+
             //// Seeding Roles
             //modelBuilder.Entity<IdentityRole>().HasData(
             //    new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
@@ -119,24 +125,24 @@ namespace DAL.DB_Context
             //    new IdentityRole { Name = "Instructor", NormalizedName = "INSTRUCTOR" }
             //);
 
-          //  // Seeding Users
-          //  modelBuilder.Entity<ApplicationUser>().HasData(
-          //    new ApplicationUser
-          //    {
-          //        Id = "admin-user-id",
-          //        UserName = "admin@example.com",
-          //        NormalizedUserName = "ADMIN@EXAMPLE.COM",
-          //        Email = "admin@example.com",
-          //        NormalizedEmail = "ADMIN@EXAMPLE.COM",
-          //        Fname = "Admin",
-          //        Lname = "User",
-          //        EduLevel = "Master's",
-          //        Country = "USA",
-          //        Birthdate = new DateTime(1985, 6, 15),
-          //        Gender = Gender.Male,
-          //        PasswordHash = HashPassword(null, "Admin123!") // Manually hashing password
-          //    }
-          //);
+            //  // Seeding Users
+            //  modelBuilder.Entity<ApplicationUser>().HasData(
+            //    new ApplicationUser
+            //    {
+            //        Id = "admin-user-id",
+            //        UserName = "admin@example.com",
+            //        NormalizedUserName = "ADMIN@EXAMPLE.COM",
+            //        Email = "admin@example.com",
+            //        NormalizedEmail = "ADMIN@EXAMPLE.COM",
+            //        Fname = "Admin",
+            //        Lname = "User",
+            //        EduLevel = "Master's",
+            //        Country = "USA",
+            //        Birthdate = new DateTime(1985, 6, 15),
+            //        Gender = Gender.Male,
+            //        PasswordHash = HashPassword(null, "Admin123!") // Manually hashing password
+            //    }
+            //);
 
             // Seeding Courses
             //modelBuilder.Entity<Course>().HasData(
