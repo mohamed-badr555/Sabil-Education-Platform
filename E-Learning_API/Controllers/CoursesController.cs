@@ -4,11 +4,13 @@ using BLL.Managers.CourseManager;
 using BLL.Specifications.Courses;
 using DAL.Data.Models;
 using E_Learning_API.Models.Response;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Learning_API.Controllers
 {
+    [EnableCors("ReactApp")]
     [Route("api/[controller]")]
     [ApiController]
     public class CoursesController : BaseApiController

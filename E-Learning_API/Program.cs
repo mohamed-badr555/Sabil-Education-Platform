@@ -24,6 +24,19 @@ using DAL.Repositories.CourseUnitRepo;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:5174")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
@@ -82,7 +95,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionMiddleware>();
-
+app.UseRouting();
+app.UseCors("ReactApp");
 app.UseAuthorization();
 
 app.MapControllers();
