@@ -237,6 +237,14 @@ namespace BLL.Managers.CourseManager
 
             return courseDto;
         }
+
+        public async Task<IEnumerable<MyCourseDTO>>  GetCoursesByUsernameAsync(string username)
+        {
+            var courses = await _courseRepo.GetCoursesByUsernameAsync(username);
+            var MyCourses = mapper.Map<IEnumerable<MyCourseDTO>>(courses);
+            return MyCourses;
+       
+        }
     }
 
 

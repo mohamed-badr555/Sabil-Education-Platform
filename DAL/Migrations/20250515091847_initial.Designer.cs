@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(E_LearningDB))]
-    [Migration("20250509205917_CreateDB")]
-    partial class CreateDB
+    [Migration("20250515091847_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -294,9 +294,8 @@ namespace DAL.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LastVideo")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<string>("LastVideoID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Progress")
                         .HasColumnType("int");
@@ -314,6 +313,8 @@ namespace DAL.Migrations
                     b.HasKey("UserId", "CourseID");
 
                     b.HasIndex("CourseID");
+
+                    b.HasIndex("LastVideoID");
 
                     b.ToTable("CourseAccounts");
                 });
@@ -703,11 +704,17 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DAL.Data.Models.Video", "LastVideo")
+                        .WithMany()
+                        .HasForeignKey("LastVideoID");
+
                     b.HasOne("DAL.Data.Models.ApplicationUser", "User")
                         .WithMany("CourseAccounts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("LastVideo");
 
                     b.Navigation("User");
 

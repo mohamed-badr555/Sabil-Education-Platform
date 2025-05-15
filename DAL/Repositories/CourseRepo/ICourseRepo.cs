@@ -9,6 +9,7 @@ namespace DAL.Repositories.CourseRepo
 {
     public interface ICourseRepo : IGenericRepository<Course>
     {
-        Task<Course> GetCourseByPathAsync(string coursePath, string userId = null);
+        Task<CourseAccount> GetCourseByPathAsync(string coursePath, string userId = null);
+        Task<IEnumerable<CourseAccount>> GetCoursesByUsernameAsync(string username);
     }
 }

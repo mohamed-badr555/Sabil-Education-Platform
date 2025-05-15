@@ -40,6 +40,18 @@ namespace BLL.Specifications.Courses
                     case "priceDesc":
                         AddOrderByDescending(c => c.Price);
                         break;
+                    case "ratingAsc":
+                        AddOrderBy(c => c.Rating);
+                        break;
+                    case "ratingDesc":
+                        AddOrderByDescending(c => c.Rating);
+                        break;
+                    case "newestAsc":
+                        AddOrderBy(c => c.Last_Update);
+                        break;
+                    case "newestDesc":
+                        AddOrderByDescending(c => c.Last_Update);
+                        break;
                     default:
                         AddOrderBy(c => c.Title);
                         break;

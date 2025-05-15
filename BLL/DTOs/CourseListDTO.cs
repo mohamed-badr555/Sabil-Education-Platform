@@ -26,7 +26,7 @@ namespace BLL.DTOs
 
         public float Price { get; set; }
 
-        public string CategoryName { get; set; }
+        public string Category { get; set; }
 
         [MaxLength(300)]
         public string ThumbnailUrl { get; set; }
