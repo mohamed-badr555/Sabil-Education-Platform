@@ -30,6 +30,8 @@ namespace BLL.DTOs
 
         [MaxLength(300)]
         public string ThumbnailUrl { get; set; }
+
+        public  string CategoryName { get; set; }
     }
 
 

@@ -121,8 +121,8 @@ namespace DAL.DB_Context
             //// Seeding Roles
             //modelBuilder.Entity<IdentityRole>().HasData(
             //    new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
-            //    new IdentityRole { Name = "User", NormalizedName = "USER" },
-            //    new IdentityRole { Name = "Instructor", NormalizedName = "INSTRUCTOR" }
+            //    new IdentityRole { Name = "User", NormalizedName = "USER" }
+            //    //new IdentityRole { Name = "Instructor", NormalizedName = "INSTRUCTOR" }
             //);
 
             //  // Seeding Users

@@ -18,15 +18,15 @@ namespace DAL.Data.Models
         [MaxLength(25)]
         public string Lname { get; set; }
 
-        public Gender Gender { get; set; }
+        public bool Gender { get; set; }
 
         [MaxLength(60)]
-        public string Country { get; set; }
+        public int CountryId { get; set; }
 
-        public DateTime Birthdate { get; set; }
+        public DateOnly Birthdate { get; set; }
 
         [MaxLength(50)]
-        public string EduLevel { get; set; }
+        public int EduLevel { get; set; }
 
         [MaxLength(200)]
         public string? Address { get; set; }
@@ -45,11 +45,11 @@ namespace DAL.Data.Models
 
         public ICollection<VideoComment> Comments { get; set; }
     }
-    public enum Gender
-    {
-        Male,
-        Female
-    }
+    //public enum Gender
+    //{
+    //    Male,
+    //    Female
+    //}
 
 
 }

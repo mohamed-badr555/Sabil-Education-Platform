@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(E_LearningDB))]
-    [Migration("20250515091847_initial")]
-    partial class initial
+    [Migration("20250516011752_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,22 +81,20 @@ namespace DAL.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTime>("Birthdate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("Birthdate")
+                        .HasColumnType("date");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Country")
-                        .IsRequired()
+                    b.Property<int>("CountryId")
                         .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
+                        .HasColumnType("int");
 
-                    b.Property<string>("EduLevel")
-                        .IsRequired()
+                    b.Property<int>("EduLevel")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -110,8 +108,8 @@ namespace DAL.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
+                    b.Property<bool>("Gender")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(500)
@@ -244,6 +242,9 @@ namespace DAL.Migrations
                         .HasColumnType("real");
 
                     b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Tags")
@@ -504,6 +505,9 @@ namespace DAL.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ParentCommentId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Text")
                         .HasMaxLength(3000)
                         .HasColumnType("nvarchar(3000)");
@@ -515,6 +519,9 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("VideoCommentId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("VideoId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -522,6 +529,8 @@ namespace DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("VideoCommentId");
 
                     b.HasIndex("VideoId");
 
@@ -553,6 +562,20 @@ namespace DAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "cf15fb1c-c002-47f7-af40-8965007d1631",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "d1683515-d2dd-4dd2-a667-424af66157e2",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -782,6 +805,10 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DAL.Data.Models.VideoComment", null)
+                        .WithMany("MyProperty")
+                        .HasForeignKey("VideoCommentId");
+
                     b.HasOne("DAL.Data.Models.Video", "Video")
                         .WithMany("VideoComments")
                         .HasForeignKey("VideoId")
@@ -890,6 +917,11 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Data.Models.Video", b =>
                 {
                     b.Navigation("VideoComments");
+                });
+
+            modelBuilder.Entity("DAL.Data.Models.VideoComment", b =>
+                {
+                    b.Navigation("MyProperty");
                 });
 #pragma warning restore 612, 618
         }

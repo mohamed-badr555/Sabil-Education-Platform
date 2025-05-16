@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,10 +34,10 @@ namespace DAL.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Fname = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
                     Lname = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    Gender = table.Column<int>(type: "int", nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    Birthdate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EduLevel = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Gender = table.Column<bool>(type: "bit", nullable: false),
+                    CountryId = table.Column<int>(type: "int", maxLength: 60, nullable: false),
+                    Birthdate = table.Column<DateOnly>(type: "date", nullable: false),
+                    EduLevel = table.Column<int>(type: "int", maxLength: 50, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -214,6 +216,7 @@ namespace DAL.Migrations
                     ThumbnailUrl = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Tags = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     CourseType = table.Column<int>(type: "int", nullable: false),
+                    StudentCount = table.Column<int>(type: "int", nullable: false),
                     CategoryID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -326,10 +329,12 @@ namespace DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ParentCommentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Text = table.Column<string>(type: "nvarchar(3000)", maxLength: 3000, nullable: true),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     VideoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    VideoCommentId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -342,6 +347,11 @@ namespace DAL.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_VideoComments_VideoComments_VideoCommentId",
+                        column: x => x.VideoCommentId,
+                        principalTable: "VideoComments",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_VideoComments_Videos_VideoId",
                         column: x => x.VideoId,
@@ -421,6 +431,15 @@ namespace DAL.Migrations
                         column: x => x.CorrectChoiceID,
                         principalTable: "QuestionChoices",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "cf15fb1c-c002-47f7-af40-8965007d1631", null, "Admin", "ADMIN" },
+                    { "d1683515-d2dd-4dd2-a667-424af66157e2", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -518,6 +537,11 @@ namespace DAL.Migrations
                 name: "IX_VideoComments_UserId",
                 table: "VideoComments",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VideoComments_VideoCommentId",
+                table: "VideoComments",
+                column: "VideoCommentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VideoComments_VideoId",

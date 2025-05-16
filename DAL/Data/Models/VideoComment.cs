@@ -10,6 +10,7 @@ namespace DAL.Data.Models
 {
     public class VideoComment : BaseEntity
     {
+        public  string? ParentCommentId { get; set; }
         [MaxLength(3000)]
         public string? Text { get; set; }
         public DateTime Time { get; set; }
@@ -21,5 +22,7 @@ namespace DAL.Data.Models
         // Video relationship (fixed)
         public string VideoId { get; set; }
         public Video Video { get; set; }  // Changed to uppercase to match convention
+
+        public  ICollection<VideoComment> MyProperty { get; set; }
     }
 }

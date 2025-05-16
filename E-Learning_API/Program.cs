@@ -21,6 +21,9 @@ using E_Learning_API.Extensions;
 using BLL.Managers.CategoryManager;
 using BLL.Managers.UnitManager;
 using DAL.Repositories.CourseUnitRepo;
+using BLL.Managers.AccountManager;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +37,8 @@ builder.Services.AddScoped<ICourseRepo, CourseRepo>();
 
 builder.Services.AddScoped<ICourseUnitRepo, CourseUnitRepo>();
 builder.Services.AddScoped<IUnitManager, UnitManager>();
+
+builder.Services.AddScoped<IAccountManager, AccountManager>();
 
 // Add application services including error handling
 builder.Services.AddApplicationServices();
@@ -66,6 +71,36 @@ builder.Services.AddDbContext<E_LearningDB>(option =>
 });
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
              .AddEntityFrameworkStores<E_LearningDB>();
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "jwt";
+    options.DefaultChallengeScheme = "jwt";
+}).AddJwtBearer("jwt", option =>
+{
+    var SecretKey = builder.Configuration.GetSection("SecretKey").Value;
+    var SecretKeyByte = Encoding.UTF8.GetBytes(SecretKey);
+    SecurityKey securityKey = new SymmetricSecurityKey(SecretKeyByte);
+
+    option.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    {
+        IssuerSigningKey = securityKey,
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
+
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    //options.Password.RequiredLength = 6;
+});
+
 
 var app = builder.Build();
 
