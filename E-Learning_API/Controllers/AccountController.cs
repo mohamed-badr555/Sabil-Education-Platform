@@ -70,7 +70,7 @@ namespace E_Learning_API.Controllers
                 var result = await _account.Register(registerInDto);
                 if(result == null)
                 {
-                    return NotFound("Save Failed");
+                    return NotFound("Registeration Failed");
                 }
                 return Ok(new
                 {

@@ -14,7 +14,7 @@ namespace BLL.Managers.AccountManager
         Task<ValidLoginDto> Login(LoginDto loginDto);
         Task<string> Register(RegisterDto loginDto);
         //Task<List<UserReadDto>> GetAllUser();
-        Task<string> CreateRole(RoleAddDto AddRole);
+        //Task<string> CreateRole(RoleAddDto AddRole);
         Task<IList<Claim>> AssignRoleToUser(ApplicationUser User);
         //Task<string> GetRoles(RegisterDto loginDto);
     }

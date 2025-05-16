@@ -33,42 +33,26 @@ namespace BLL.Managers.AccountManager
 
         public async Task<IList<Claim>> AssignRoleToUser(ApplicationUser User)
         {
-            //var user = await _userManager.FindByIdAsync(User.Id);
+            var user = await _userManager.FindByIdAsync(User.Id);
             //var role = await _roleManager.FindByIdAsync(assignRole.RoleId);
 
-            if(User != null)
+            if(user != null)
             {
-                var result = await _userManager.AddToRoleAsync(User, "User");
+                var result = await _userManager.AddToRoleAsync(user, "User");
 
                 if (result.Succeeded)
                 {
                     List<Claim> claims = new List<Claim>();
 
                     claims.Add(new Claim(ClaimTypes.Role, "User"));
-                    claims.Add(new Claim(ClaimTypes.Name, User.UserName));
+                    claims.Add(new Claim(ClaimTypes.Name, user.UserName));
 
-                    await _userManager.AddClaimsAsync(User, claims);
+                    await _userManager.AddClaimsAsync(user, claims);
                 }
                 //return "Save Fail";
             }
-            var claim = await _userManager.GetClaimsAsync(User);
+            var claim = await _userManager.GetClaimsAsync(user);
             return claim;
-        }
-
-        public async Task<string> CreateRole(RoleAddDto AddRole)
-        {
-            IdentityRole role = new IdentityRole
-            {
-                Name = AddRole.Role,
-                NormalizedName = AddRole.Role.ToUpper()
-            };
-            var result = await _roleManager.CreateAsync(role);
-
-            if (result.Succeeded)
-            {
-                return "Created Successfully";
-            }
-            return "Save fail";
         }
 
 
@@ -92,14 +76,14 @@ namespace BLL.Managers.AccountManager
                 throw new CustomException(new List<string> { "برجاء التأكد من البيانات والمحاولة مرة أخرى" });
             }
 
-            var roles = _userManager.GetRolesAsync(user);
+            var role = await _userManager.GetRolesAsync(user);
             var claims = await _userManager.GetClaimsAsync(user);
             return new ValidLoginDto
             {
                 token = GenerateToken(claims),
                 email = user.Email,
                 firstName = user.Fname,
-                roles = await _userManager.GetRolesAsync(user),
+                roles = role,
                 isVerified = false
             };
         }
@@ -139,15 +123,17 @@ namespace BLL.Managers.AccountManager
             
             var result = await _userManager.CreateAsync(user, registerDto.password);
 
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors.Select(e => e.Description).ToList();
-                throw new CustomException(errors);
-            }
+            //if (!result.Succeeded)
+            //{
+            //    var errors = result.Errors.Select(e => e.Description).ToList();
+            //    throw new CustomException(errors);
+            //}
 
             if (result.Succeeded)
             {
-                var claim = await AssignRoleToUser(user);
+                var createdUser = await _userManager.FindByEmailAsync(registerDto.email);
+
+                var claim = await AssignRoleToUser(createdUser);
                 
                 return GenerateToken(claim);
             }
