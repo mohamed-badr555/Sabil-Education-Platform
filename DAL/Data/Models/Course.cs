@@ -21,7 +21,7 @@ namespace DAL.Data.Models
         public float Price { get; set; }
         public bool IsFree { get; set; } = false;
         [Range(1, 5)]
-        public int Rating { get; set; } = 0;
+        public int Rating { get; set; } = 2;
         [MaxLength(2000)]
         public string Description { get; set; }
         [MaxLength(1500)]

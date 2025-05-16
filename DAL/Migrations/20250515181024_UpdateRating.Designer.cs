@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(E_LearningDB))]
-    [Migration("20250515091847_initial")]
-    partial class initial
+    [Migration("20250515181024_UpdateRating")]
+    partial class UpdateRating
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,6 +244,9 @@ namespace DAL.Migrations
                         .HasColumnType("real");
 
                     b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Tags")

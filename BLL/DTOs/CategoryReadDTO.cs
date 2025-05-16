@@ -8,7 +8,8 @@ namespace BLL.DTOs
 {
     public class CategoryReadDTO
     {
-        public string Id { get; set; }
+        public string Id { get; set; }  // Keep original GUID ID
+        //public int SequentialId { get; set; }  // Add a sequential ID
         public string name { get; set; }
     }
 }

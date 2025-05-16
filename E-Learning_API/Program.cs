@@ -30,7 +30,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:5174")
+        policy.WithOrigins("http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -64,7 +64,11 @@ builder.Services.AddScoped<IBasketManager, BasketManager>();
 builder.Services.AddScoped<ICourseManager, CourseManager>();
 //builder.Services.AddScoped<ICourseManager,CourseManager>();
 
+// Register HttpContextAccessor
+builder.Services.AddHttpContextAccessor();
 
+// Register UrlService
+builder.Services.AddScoped<BLL.Services.UrlService>();
 
 builder.Services.AddMemoryCache();
 

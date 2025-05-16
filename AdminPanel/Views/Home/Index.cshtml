@@ -1,8 +1,202 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model AdminPanel.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<section class="p-2 border-end border-top border-4 border-primary">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Admin Dashboard</h1>
+        <div>
+            <span class="text-muted">Welcome to your Sabil dashboard</span>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <!-- Total Courses Card -->
+        <div class="col-md-4">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Total Courses</h5>
+                        <div class="rounded-circle bg-white p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px">
+                            <i class="fa-solid fa-chalkboard-user text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-baseline mt-auto">
+                        <h2 class="mb-0 me-2">@Model.TotalCourses</h2>
+                        <a asp-controller="Course" asp-action="Index" class="text-white opacity-75 text-decoration-none small">View all</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Categories Card -->
+        <div class="col-md-4">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Total Categories</h5>
+                        <div class="rounded-circle bg-white p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px">
+                            <i class="fa-solid fa-layer-group text-success"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-baseline mt-auto">
+                        <h2 class="mb-0 me-2">@Model.TotalCategories</h2>
+                        <a asp-controller="Category" asp-action="Index" class="text-white opacity-75 text-decoration-none small">View all</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Card -->
+        <div class="col-md-4">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Quick Actions</h5>
+                        <div class="rounded-circle bg-white p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px">
+                            <i class="fa-solid fa-bolt text-info"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column gap-2 mt-2">
+                        <a href="#" class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#addCourse">
+                            <i class="fa-solid fa-plus me-1"></i> Add New Course
+                        </a>
+                        <a href="#" class="btn btn-sm btn-outline-light" data-bs-toggle="modal" data-bs-target="#addCategory">
+                            <i class="fa-solid fa-plus me-1"></i> Add New Category
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popular Courses Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Popular Courses</h5>
+            <a asp-controller="Course" asp-action="Index" class="btn btn-sm btn-primary">
+                View All Courses
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @if (Model.PopularCourses.Any())
+                {
+                    @foreach (var course in Model.PopularCourses)
+                    {
+                        <div class="col-md-3">
+                            <div class="card shadow-sm h-100">
+                                <img src="@(string.IsNullOrEmpty(course.ThumbnailUrl) ? "/images/Learning-cuate.png" : $"/Files/courses/{course.ThumbnailUrl}")"
+                                     class="card-img-top" alt="@course.Title" style="height: 140px; object-fit: cover;">
+                                <div class="card-body d-flex flex-column">
+                                    <h6 class="card-title">@course.Title</h6>
+                                    <p class="card-text small text-muted mb-2">@course.Category • @course.Level</p>
+                                    <div class="d-flex justify-content-between mt-auto">
+                                        <span class="badge lineCheck bg-primary">@course.Price EGP</span>
+                                        <a asp-controller="Units" asp-action="Index" asp-route-courseId="@course.Id" class="btn btn-sm btn-outline-primary">
+                                            Manage
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center py-4">
+                        <p class="text-muted mb-3">No popular courses found</p>
+                        <a asp-controller="Course" asp-action="Index" class="btn btn-primary">
+                            <i class="fa-solid fa-plus me-1"></i> Add Your First Course
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Timeline -->
+    <div class="card">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Recent Activity</h5>
+        </div>
+        <div class="card-body">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-primary"></div>
+                    <div class="timeline-content">
+                        <h6 class="mb-0">System ready</h6>
+                        <p class="text-muted small mb-0">Your Sabil platform is up and running</p>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .timeline {
+                    position: relative;
+                    padding-left: 30px;
+                }
+                .timeline-item {
+                    position: relative;
+                    padding-bottom: 1.5rem;
+                }
+                .timeline-marker {
+                    position: absolute;
+                    width: 15px;
+                    height: 15px;
+                    border-radius: 50%;
+                    left: -22px;
+                    top: 4px;
+                }
+                .timeline-item:not(:last-child):before {
+                    content: '';
+                    position: absolute;
+                    left: -15px;
+                    top: 20px;
+                    height: 100%;
+                    width: 2px;
+                    background-color: #e9ecef;
+                }
+            </style>
+        </div>
+    </div>
+</section>
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="addCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryLabel">Add New Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Category" asp-action="Add" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="Name" name="Name" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<!-- Add Course Modal would be complex to include here, so it redirects to the course page -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addCourseButton = document.querySelector('[data-bs-target="#addCourse"]');
+        if (addCourseButton) {
+            addCourseButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = '@Url.Action("Index", "Course")';
+            });
+        }
+    });
+</script>

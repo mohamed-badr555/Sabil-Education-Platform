@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class InitalCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -214,6 +214,7 @@ namespace DAL.Migrations
                     ThumbnailUrl = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Tags = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     CourseType = table.Column<int>(type: "int", nullable: false),
+                    StudentCount = table.Column<int>(type: "int", nullable: false),
                     CategoryID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)

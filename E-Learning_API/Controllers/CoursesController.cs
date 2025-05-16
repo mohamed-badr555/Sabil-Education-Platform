@@ -2,6 +2,7 @@
 using AutoMapper;
 using BLL.DTOs;
 using BLL.Managers.CourseManager;
+using BLL.Services;
 using BLL.Specifications.Courses;
 using DAL.Data.Models;
 using E_Learning_API.Models.Response;
@@ -17,10 +18,12 @@ namespace E_Learning_API.Controllers
     public class CoursesController : BaseApiController
     {
         private readonly ICourseManager _courseManager;
+        private readonly UrlService _urlService;
 
-        public CoursesController(ICourseManager courseManager)
+        public CoursesController(ICourseManager courseManager, UrlService urlService)
         {
             _courseManager = courseManager;
+            _urlService = urlService;
         }
 
         // In CoursesController.cs
@@ -29,7 +32,17 @@ namespace E_Learning_API.Controllers
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ApiResponseFormat<Pagination<CourseListDTO>>>> GetAllAsync([FromQuery] CourseSpecsParams courseparams)
         {
+            // Make sure courseparams is initialized if null
+            courseparams ??= new CourseSpecsParams();
+
             var pagination = await _courseManager.GetAllAsync(courseparams);
+            
+            // Add full thumbnail URLs to each course
+            foreach (var course in pagination.Data)
+            {
+                course.FullThumbnailUrl = _urlService.GetThumbnailUrl(course.ThumbnailUrl);
+            }
+
             return OkResponse(pagination, "List of courses");
         }
 
@@ -39,7 +52,14 @@ namespace E_Learning_API.Controllers
         public async Task<ActionResult<ApiResponseFormat<Pagination<CourseListDTO>>>> GetPopular()
         {
             var courses = await _courseManager.GetPopularAsync();
-            return OkResponse(courses, "List of Courses");
+            
+            // Add full thumbnail URLs to each course
+            foreach (var course in courses.Data)
+            {
+                course.FullThumbnailUrl = _urlService.GetThumbnailUrl(course.ThumbnailUrl);
+            }
+
+            return OkResponse(courses, "popular of Courses");
         }
 
         [HttpGet("categories")]
@@ -140,23 +160,23 @@ namespace E_Learning_API.Controllers
         }
 
 
-        [HttpGet("mine")]
-        [ProducesResponseType(typeof(ApiResponseFormat<IEnumerable<MyCourseDTO>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
-        //[Authorize] // Require authentication
-        public async Task<ActionResult<ApiResponseFormat<IEnumerable<MyCourseDTO>>>> GetMyCourses()
-        {
-            //var username = User.Identity?.Name;
-            var username = "yousseff2255";
+        //[HttpGet("mine")]
+        //[ProducesResponseType(typeof(ApiResponseFormat<IEnumerable<MyCourseDTO>>), StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(ApiResponse), StatusCodes.Status500InternalServerError)]
+        ////[Authorize] // Require authentication
+        //public async Task<ActionResult<ApiResponseFormat<IEnumerable<MyCourseDTO>>>> GetMyCourses()
+        //{
+        //    //var username = User.Identity?.Name;
+        //    var username = "yousseff2255";
 
-            if (string.IsNullOrEmpty(username))
-            {
-                return Unauthorized();
-            }
+        //    if (string.IsNullOrEmpty(username))
+        //    {
+        //        return Unauthorized();
+        //    }
 
-            var courses = await _courseManager.GetCoursesByUsernameAsync(username);
-            return OkResponse(courses, "courses retrieved successfully");
+        //    var courses = await _courseManager.GetCoursesByUsernameAsync(username);
+        //    return OkResponse(courses, "courses retrieved successfully");
 
-        }
+        //}
     }
 }

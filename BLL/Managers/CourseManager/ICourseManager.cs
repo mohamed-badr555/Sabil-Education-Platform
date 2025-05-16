@@ -24,5 +24,6 @@ namespace BLL.Managers.CourseManager
         // Add this new method
         Task<CourseDetailsDTO> GetCourseDetailsForEditAsync(string id);
         Task<IEnumerable<MyCourseDTO>> GetCoursesByUsernameAsync(string username);
+
     }
 }

@@ -27,7 +27,7 @@ namespace BLL.MappingProfiles
             // Fix the mapping for Course to CourseListDTO - focus on the Id property
             CreateMap<Course, CourseListDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id)) // Explicitly map string Id to int Id
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null));
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null));
 
             CreateMap<CourseListDTO, Course>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString())); // Convert int Id back to string
@@ -41,6 +41,10 @@ namespace BLL.MappingProfiles
                 .ForMember(dest => dest.CourseType, opt => opt.MapFrom(src => GetCourseTypeInt(src.CourseType)))
                 .ForMember(dest => dest.CategoryID, opt => opt.MapFrom(src => src.CategoryId))
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => !string.IsNullOrEmpty(src.Id)));
+
+            //// In your MappingProfile class
+            //CreateMap<Category, CategoryReadDTO>()
+            //    .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.Name));
 
             CreateMap<Category, CategoryReadDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -86,6 +90,7 @@ namespace BLL.MappingProfiles
             CreateMap<VideoComment, VideoComment>();
 
 
+
             CreateMap<CourseAccount, MyCourseDTO>()
                 .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.CourseID))
                 .ForMember(dest => dest.IsCompleted, opt => opt.MapFrom(src => src.IsCompleted))
@@ -100,7 +105,16 @@ namespace BLL.MappingProfiles
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.course.Duration))
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.course.Category.Name));
 
-
+            CreateMap<Course, CourseContentDTO>()
+    .ForMember(dest => dest.Units, opt => opt.MapFrom(src => src.CourseUnits))
+    .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+    .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => src.Duration))
+    .ForMember(dest => dest.ThumbnailUrl, opt => opt.MapFrom(src => src.ThumbnailUrl))
+    .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+    .ForMember(dest => dest.CourseType, opt => opt.MapFrom(src => GetCourseTypeString(src.CourseType)))
+    .ForMember(dest => dest.StudentsCount, opt => opt.MapFrom(src => src.StudentCount))
+    .ForMember(dest => dest.progress, opt => opt.Ignore())
+    .ForMember(dest => dest.lastAccessedVideoId, opt => opt.Ignore());
 
 
 

@@ -25,7 +25,7 @@ namespace BLL.Managers.CourseManager
         private readonly IMapper mapper;
         private readonly IMemoryCache memoryCache;
         private readonly ILogger<CourseManager> _logger;
-
+            
         public CourseManager(ICourseRepo courseRepo, ILogger<CourseManager> logger, IGenericRepository<Category> categoryRepo, IVideoRepo _videoRepo, IMapper mapper , IMemoryCache memoryCache)
         {
             _courseRepo = courseRepo;   
@@ -110,12 +110,28 @@ namespace BLL.Managers.CourseManager
         }
         public async Task<CourseContentDTO> GetByIdAsync(string id)
         {
-            var CourseModel = await _courseRepo.GetByIdAsync(id);
-            if (CourseModel == null)
-                throw new KeyNotFoundException($"Course with ID {id} not found.");
+            try
+            {
+                var courseModel = await _courseRepo.GetByIdAsync(id);
+                if (courseModel == null)
+                    throw new KeyNotFoundException($"Course with ID {id} not found.");
 
-            var CourseDto = mapper.Map<CourseContentDTO>(CourseModel);
-            return CourseDto;
+                // Add logging to help diagnose the issue
+                _logger.LogInformation($"Mapping Course with ID {id} to CourseContentDTO");
+
+                var courseDto = mapper.Map<CourseContentDTO>(courseModel);
+                return courseDto;
+            }
+            catch (AutoMapper.AutoMapperMappingException ex)
+            {
+                _logger.LogError(ex, $"Mapping error for Course ID {id}");
+                throw new ApplicationException($"Error mapping course data: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error retrieving course with ID {id}");
+                throw;
+            }
         }
 
         public async Task AddAsync(CourseAddDTO courseDto)
