@@ -164,5 +164,6 @@ namespace DAL.DB_Context
         public DbSet<Video> Videos { get; set; }
         public DbSet<VideoComment> VideoComments { get; set; }
         public DbSet<AccountAnswer> AccountAnswers { get; set; }
+        public DbSet<Rate> Rates { get; set; }
     }
 }

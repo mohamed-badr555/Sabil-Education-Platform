@@ -5,11 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using BLL.DTOs;
 using BLL.Specifications.Courses;
+using DAL.Data.Models;
 
 namespace BLL.Managers.CourseManager
 {
     public interface ICourseManager
     {
+        object Courses { get; set; }
+        object Rates { get; }
+
         Task<Pagination<CourseListDTO>> GetAllAsync(CourseSpecsParams courseparams);
         Task<IEnumerable<CategoryReadDTO>> GetAllCategoriesAsync();
         Task<Pagination<CourseListDTO>> GetPopularAsync();
@@ -19,5 +23,7 @@ namespace BLL.Managers.CourseManager
         Task AddAsync(CourseAddDTO Course);
         Task UpdateAsync(CourseAddDTO Course);
         Task DeleteAsync(int id);
+        Task SaveChangesAsync();
+        Task<Course> AddRateAsync(string coursePath, Rate rate);
     }
 }

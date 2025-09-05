@@ -19,6 +19,10 @@ namespace BLL.Managers.CourseManager
         private readonly IGenericRepository<Category> categoryRepo;
         private readonly IMapper mapper;
 
+        public object Courses { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public object Rates => throw new NotImplementedException();
+
         public CourseManager(IGenericRepository<Course> courseRepo, IGenericRepository<Category> categoryRepo, IMapper mapper)
         {
             _courseRepo = courseRepo;
@@ -145,7 +149,16 @@ namespace BLL.Managers.CourseManager
             await _courseRepo.DeleteAsync(course);
         }
 
-       
+
+        public Task SaveChangesAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Course> AddRateAsync(string coursePath, Rate rate)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class Pagination<T>
